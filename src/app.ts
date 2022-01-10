@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import db from "./models";
+//import db from "./models";
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-db.sync();
+// db.sync();
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

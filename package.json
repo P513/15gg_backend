@@ -4,8 +4,8 @@
   "description": "LOL Duo Website",
   "main": "index.js",
   "scripts": {
-    "build": "eslint ",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node --files src/app.ts",
+    "build": "npx tsc",
+    "dev": "nodemon --exec ts-node --files src/app.ts",
     "start": "node dist/app.js",
     "test": "echo test code"
   },
@@ -28,11 +28,6 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.8",
-    "@typescript-eslint/eslint-plugin": "^5.9.0",
-    "@typescript-eslint/parser": "^5.9.0",
-    "eslint": "^8.6.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "ts-node": "^10.4.0",

@@ -1,21 +1,48 @@
-import express from "express";
-import bodyParser from "body-parser";
+import * as dotenv from "dotenv";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
-//import db from "./models";
+// import { auth } from "./routes/auth";
+// import { myinfo } from "./routes/myinfo";
+// import { profile } from "./routes/profile";
+// import { rating } from "./routes/rating";
+import { sequelize } from "./models";
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 
+dotenv.config();
+
+const PORT: number = parseInt(process.env.DB_PORT as string, 10);
+const HOST: string = process.env.DB_HOST;
 const app = express();
+app.set('port', process.env.DB_PORT);
 
-const corsOptions = {
-  origin: "http://localhost:8081"
-};
+// Middleware
+app.use(cors());
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log(`Request Occur! ${req.method}, ${req.url}`);
+  next();
+})
 
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Router
+// app.use('/auth', auth);
+// app.use('/myinfo', myinfo);
+// app.use('/profile', profile);
+// app.use('/rating', rating);
 
-// db.sync();
+app.listen(PORT, HOST, async () => {
+  console.log(`Server Listening on ${HOST}:${PORT}`);
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+  await sequelize.authenticate()
+    .then(async () => {
+      console.log("Connection Success");
+    })
+    .catch((e) => {
+      console.log("Connection Failed. Reason: ", e);
+    })
+})

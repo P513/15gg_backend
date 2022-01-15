@@ -28,8 +28,8 @@ exports.config = {
         "password": process.env.DB_PASSWORD,
         "database": process.env.DB_DBNAME,
         "host": process.env.DB_HOST,
-        "port": process.env.DB_PORT,
-        "dialect": "mysql"
+        "port": parseInt(process.env.DB_PORT, 10),
+        "dialect": "mysql",
     },
     // "test": {
     // }

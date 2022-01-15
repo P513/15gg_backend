@@ -5,5 +5,6 @@ const sequelize_1 = require("sequelize");
 const config_1 = require("../config/config");
 exports.sequelize = new sequelize_1.Sequelize(config_1.config.development.database, config_1.config.development.username, config_1.config.development.password, {
     host: config_1.config.development.host,
-    dialect: 'mysql'
+    port: config_1.config.development.port,
+    dialect: 'mysql',
 });

@@ -9,7 +9,10 @@ export const config = {
     "host": process.env.DB_HOST,
     "port": parseInt(process.env.DB_PORT as string, 10),
     "dialect": "mysql",
+    "timezone": '+09:00',
   },
   // "test": {
+  // }
+  // "production": {
   // }
 }

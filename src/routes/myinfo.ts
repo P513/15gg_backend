@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router, } from 'express';
+import { UserRep } from '../models/index';
 
 export const myinfo = Router();
 

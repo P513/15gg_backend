@@ -1,7 +1,12 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import { config } from '../config/config';
+import User from './user';
+import Chat from './chat';
+import Join from './join';
+import Nickname from './nickname';
+import Room from './room';
 
-export const sequelize = new Sequelize(
+export const db: Sequelize = new Sequelize(
   config.development.database,
   config.development.username,
   config.development.password,
@@ -11,3 +16,16 @@ export const sequelize = new Sequelize(
     dialect: 'mysql',
   }
 );
+
+db.addModels([User]);
+db.addModels([Chat]);
+db.addModels([Join]);
+db.addModels([Nickname]);
+db.addModels([Room]);
+
+// https://github.com/RobinBuschmann/sequelize-typescript
+export const UserRep = db.getRepository(User);
+export const ChatRep = db.getRepository(Chat);
+export const JoinRep = db.getRepository(Join);
+export const NicknameRep = db.getRepository(Nickname);
+export const RoomRep = db.getRepository(Room);

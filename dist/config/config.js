@@ -30,7 +30,10 @@ exports.config = {
         "host": process.env.DB_HOST,
         "port": parseInt(process.env.DB_PORT, 10),
         "dialect": "mysql",
+        "timezone": '+09:00',
     },
     // "test": {
+    // }
+    // "production": {
     // }
 };

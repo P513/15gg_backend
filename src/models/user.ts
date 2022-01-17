@@ -1,42 +1,51 @@
-import { Table, Column, Model, HasMany, PrimaryKey, ForeignKey, IsUUID } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, IsUUID, CreatedAt, UpdatedAt, DeletedAt, AllowNull, Default, Unique } from 'sequelize-typescript';
 
-@Table({ timestamps: true })
+@Table({ timestamps: true, paranoid: true })
 export default class User extends Model<User>{
     @IsUUID(4)
     @PrimaryKey
-    @Column
-    id!: number;
+    @Column(DataType.STRING)
+    id!: string;
 
-    @Column
-    nickNameId: 
+    @IsUUID(4)
+    // 연결 전까지는 Null
+    @AllowNull(true)
+    @Column(DataType.STRING)
+    nicknameId!: string;
 
-    @Column
-    salt: 
+    @Column(DataType.STRING)
+    salt!: string;
 
-    @Column
-    email:
+    @Unique(true)
+    @AllowNull(true)
+    @Column(DataType.STRING)
+    email!: string;
 
-    @Column
-    googleOAuth:
+    @AllowNull(true)
+    @Column(DataType.STRING)
+    googleOAuth!: string;
 
-    @Column
-    kakaoOAuth:
+    @AllowNull(true)
+    @Column(DataType.STRING)
+    kakaoOAuth!: string;
 
-    @Column
-    authToken:
+    @Default(0)
+    @Column(DataType.BIGINT)
+    evalCnt!: bigint;
 
-    @Column
-    evalCnt:    
-    
-    @Column
-    evalSum:
+    @Default(0)
+    @Column(DataType.BIGINT)
+    evalSum!: bigint;
 
-    @Column
-    createdAt:
+    @CreatedAt
+    @Column(DataType.DATE)
+    createdAt!: Date;
 
-    @Column
-    updatedAt:
+    @UpdatedAt
+    @Column(DataType.DATE)
+    updatedAt!: Date;
 
-    @Column
-    deletedAt:
+    @DeletedAt
+    @Column(DataType.DATE)
+    deletedAt!: Date;
 }

@@ -1,21 +1,28 @@
-import { Table, Column, Model, HasMany, IsUUID, PrimaryKey } from 'sequelize-typescript';
+import { Table, Column, Model, HasMany, IsUUID, PrimaryKey, DataType, ForeignKey, CreatedAt } from 'sequelize-typescript';
+import Room from './room';
+import User from './user';
 
 @Table({ timestamps: true })
 export default class Chat extends Model<Chat>{
     @IsUUID(4)
     @PrimaryKey
-    @Column
-    id!: number;
+    @Column(DataType.STRING)
+    id!: string;
 
-    @Column
-    userId: 
+    @IsUUID(4)
+    @ForeignKey(() => Room)
+    @Column(DataType.STRING)
+    roomId!: string;
 
-    @Column
-    roomId: 
+    @IsUUID(4)
+    @ForeignKey(() => User)
+    @Column(DataType.STRING)
+    userId!: string;
 
-    @Column
-    content:
+    @Column(DataType.STRING)
+    content!: string;
 
-    @Column
-    createdAt:
+    @CreatedAt
+    @Column(DataType.DATE)
+    createdAt!: Date;
 }

@@ -65,7 +65,7 @@ app.use('/profile', profile_1.profile);
 app.use('/rating', rating_1.rating);
 app.listen(PORT, HOST, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Server Listening on ${HOST}:${PORT}`);
-    yield models_1.sequelize.authenticate()
+    yield models_1.db.authenticate()
         .then(() => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connection Success");
     }))

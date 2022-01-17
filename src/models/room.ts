@@ -1,15 +1,13 @@
-import { Table, Column, Model, HasMany, IsUUID, PrimaryKey } from 'sequelize-typescript';
+import { Table, Column, Model, IsUUID, PrimaryKey, DataType, CreatedAt } from 'sequelize-typescript';
 
 @Table({ timestamps: true })
 export default class Room extends Model<Room>{
     @IsUUID(4)
     @PrimaryKey
-    @Column
-    id!: number;
+    @Column(DataType.STRING)
+    id!: string;
 
-    @Column
-    createdAt:
-
-    @Column
-    deletedAt:
+    @CreatedAt
+    @Column(DataType.DATE)
+    createdAt!: Date;
 }

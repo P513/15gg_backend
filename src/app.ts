@@ -5,7 +5,7 @@ import { auth } from "./routes/auth";
 import { myinfo } from "./routes/myinfo";
 import { profile } from "./routes/profile";
 import { rating } from "./routes/rating";
-import { sequelize } from "./models";
+import { db } from "./models";
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
@@ -38,7 +38,7 @@ app.use('/rating', rating);
 app.listen(PORT, HOST, async () => {
   console.log(`Server Listening on ${HOST}:${PORT}`);
 
-  await sequelize.authenticate()
+  await db.authenticate()
     .then(async () => {
       console.log("Connection Success");
     })

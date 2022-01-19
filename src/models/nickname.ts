@@ -1,7 +1,7 @@
-import { Table, Column, Model, HasMany, ForeignKey, PrimaryKey, IsUUID, DataType, Unique, Default } from 'sequelize-typescript';
+import { Table, Column, Model, HasMany, ForeignKey, PrimaryKey, IsUUID, DataType, Unique } from 'sequelize-typescript';
 import User from './user';
 
-@Table
+@Table({ tableName: "Nickname" })
 export default class Nickname extends Model<Nickname>{
   @IsUUID(4)
   @PrimaryKey
@@ -26,11 +26,11 @@ export default class Nickname extends Model<Nickname>{
   @Column(DataType.STRING)
   ment!: string;
 
-  @Column(DataType.ARRAY(DataType.STRING))
-  selfPos!: string;
+  @Column(DataType.INTEGER)
+  selfPos!: number;
 
-  @Column(DataType.ARRAY(DataType.STRING))
-  duoPos!: string;
+  @Column(DataType.INTEGER)
+  duoPos!: number;
 
   @Column(DataType.INTEGER)
   playStyle!: number;

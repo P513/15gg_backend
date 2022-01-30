@@ -6,8 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "dev": "nodemon --exec ts-node --files src/app.ts",
-    "start": "node dist/app.js",
-    "test": "echo test code"
+    "start": "node dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -21,26 +20,36 @@
   "homepage": "https://github.com/P513/15gg_backend#readme",
   "dependencies": {
     "@types/validator": "^13.7.1",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
+    "passport": "^0.5.2",
+    "passport-kakao": "^1.0.1",
+    "passport-local": "^1.0.0",
+    "passport-naver": "^1.0.6",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.13.0",
     "sequelize-cli": "^6.3.0",
     "sequelize-typescript": "^2.1.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.4",
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.8",
+    "@types/passport": "^1.0.7",
+    "@types/passport-local": "^1.0.34",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "ts-node": "^10.4.0",

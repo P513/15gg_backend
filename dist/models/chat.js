@@ -18,22 +18,20 @@ const user_1 = __importDefault(require("./user"));
 let Chat = class Chat extends sequelize_typescript_1.Model {
 };
 __decorate([
-    (0, sequelize_typescript_1.IsUUID)(4),
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
-    __metadata("design:type", String)
+    sequelize_typescript_1.AutoIncrement,
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
+    __metadata("design:type", Number)
 ], Chat.prototype, "id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.IsUUID)(4),
     (0, sequelize_typescript_1.ForeignKey)(() => room_1.default),
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
-    __metadata("design:type", String)
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
+    __metadata("design:type", Number)
 ], Chat.prototype, "roomId", void 0);
 __decorate([
-    (0, sequelize_typescript_1.IsUUID)(4),
     (0, sequelize_typescript_1.ForeignKey)(() => user_1.default),
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
-    __metadata("design:type", String)
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
+    __metadata("design:type", Number)
 ], Chat.prototype, "userId", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
@@ -45,6 +43,6 @@ __decorate([
     __metadata("design:type", Date)
 ], Chat.prototype, "createdAt", void 0);
 Chat = __decorate([
-    (0, sequelize_typescript_1.Table)({ timestamps: true })
+    (0, sequelize_typescript_1.Table)({ tableName: "Chat", timestamps: true })
 ], Chat);
 exports.default = Chat;

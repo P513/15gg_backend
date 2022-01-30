@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+// DB 설정
 export const config = {
   "development": {
     "username": process.env.DB_USERNAME,

@@ -1,17 +1,21 @@
-import { Table, Column, Model, DataType, PrimaryKey, IsUUID, CreatedAt, UpdatedAt, DeletedAt, AllowNull, Default, Unique } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, IsUUID, CreatedAt, UpdatedAt, DeletedAt, AllowNull, Default, Unique, AutoIncrement } from 'sequelize-typescript';
 
 @Table({ tableName: "User", timestamps: true, paranoid: true })
 export default class User extends Model<User>{
-  @IsUUID(4)
   @PrimaryKey
-  @Column(DataType.STRING)
-  id!: string;
+  @AutoIncrement
+  @Column(DataType.BIGINT)
+  id!: number;
 
-  @IsUUID(4)
   // 연결 전까지는 Null
+  @Unique(true)
   @AllowNull(true)
+  @Column(DataType.BIGINT)
+  nicknameId!: number;
+
+  // hashing된 비밀번호
   @Column(DataType.STRING)
-  nicknameId!: string;
+  password!: string;
 
   @Column(DataType.STRING)
   salt!: string;

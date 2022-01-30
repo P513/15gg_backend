@@ -1,7 +1,26 @@
+import { UserRep } from './../models/index';
 import { NextFunction, Request, Response, Router, } from 'express';
-import { UserRep } from '../models/index';
+import bcrypt from 'bcrypt';
+import { isNotLoggedIn } from './middlewares';
+import Nickname from '../models/nickname';
+import passport from 'passport';
+import User from '../models/user';
 export const auth = Router();
 
-auth.get('/', (req: Request, res: Response, next: NextFunction) => {
-  console.log('hello, auth!');
-});
+// auth.get('/', (req: Request, res: Response, next: NextFunction) => {
+//   console.log('hello, auth!');
+// });
+
+auth.post('/signup', isNotLoggedIn, async (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate('signup', async (err: any, _user: User, info: any) => {
+    if (err) {
+      return res.status(403).send(err);
+    }
+    if (info) {
+      return res.status(403).send(info);
+    }
+    if (_user) {
+      return res.status(200).send("회원가입을 완료하였습니다");
+    }
+  })(req, res, next);
+})

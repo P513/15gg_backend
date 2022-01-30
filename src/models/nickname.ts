@@ -1,17 +1,17 @@
-import { Table, Column, Model, HasMany, ForeignKey, PrimaryKey, IsUUID, DataType, Unique } from 'sequelize-typescript';
+import { Table, Column, Model, HasMany, ForeignKey, PrimaryKey, IsUUID, DataType, Unique, Default, AutoIncrement } from 'sequelize-typescript';
 import User from './user';
 
 @Table({ tableName: "Nickname" })
 export default class Nickname extends Model<Nickname>{
-  @IsUUID(4)
   @PrimaryKey
-  @Column(DataType.STRING)
-  id!: string;
+  @AutoIncrement
+  @Column(DataType.BIGINT)
+  id!: number;
 
-  @IsUUID(4)
+  @Unique(true)
   @ForeignKey(() => User)
-  @Column(DataType.STRING)
-  userId!: string;
+  @Column(DataType.BIGINT)
+  userId!: number;
 
   @Unique(true)
   @Column(DataType.STRING)

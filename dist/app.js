@@ -42,15 +42,28 @@ const models_1 = require("./models");
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
+const passport_1 = __importDefault(require("passport"));
+const passport_2 = require("./config/passport");
+const express_session_1 = __importDefault(require("express-session"));
 dotenv.config();
 const PORT = parseInt(process.env.PORT, 10);
 const HOST = process.env.DB_HOST;
 const app = (0, express_1.default)();
-// app.set('port', process.env.PORT);
+// passport 설정
+(0, passport_2.passportConfig)();
 // Middleware
 app.use((0, cors_1.default)());
 app.use((0, morgan_1.default)('dev'));
 app.use((0, cookie_parser_1.default)());
+app.use((0, express_session_1.default)({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+    },
+}));
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
@@ -58,6 +71,8 @@ app.use((req, res, next) => {
     console.log(`Request Occur! ${req.method}, ${req.url}`);
     next();
 });
+app.use(passport_1.default.initialize());
+app.use(passport_1.default.session());
 // Router
 app.use('/auth', auth_1.auth);
 app.use('/myinfo', myinfo_1.myinfo);

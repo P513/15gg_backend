@@ -13,19 +13,21 @@ const sequelize_typescript_1 = require("sequelize-typescript");
 let User = class User extends sequelize_typescript_1.Model {
 };
 __decorate([
-    (0, sequelize_typescript_1.IsUUID)(4),
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
-    __metadata("design:type", String)
+    sequelize_typescript_1.AutoIncrement,
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
+    __metadata("design:type", Number)
 ], User.prototype, "id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.IsUUID)(4)
-    // 연결 전까지는 Null
-    ,
+    (0, sequelize_typescript_1.Unique)(true),
     (0, sequelize_typescript_1.AllowNull)(true),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
+    __metadata("design:type", Number)
+], User.prototype, "nicknameId", void 0);
+__decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
     __metadata("design:type", String)
-], User.prototype, "nicknameId", void 0);
+], User.prototype, "password", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
     __metadata("design:type", String)
@@ -72,6 +74,6 @@ __decorate([
     __metadata("design:type", Date)
 ], User.prototype, "deletedAt", void 0);
 User = __decorate([
-    (0, sequelize_typescript_1.Table)({ timestamps: true, paranoid: true })
+    (0, sequelize_typescript_1.Table)({ tableName: "User", timestamps: true, paranoid: true })
 ], User);
 exports.default = User;

@@ -1,11 +1,11 @@
-import { Table, Column, Model, IsUUID, PrimaryKey, DataType, CreatedAt } from 'sequelize-typescript';
+import { Table, Column, Model, IsUUID, PrimaryKey, DataType, CreatedAt, Default, AutoIncrement } from 'sequelize-typescript';
 
 @Table({ tableName: "Room", timestamps: true })
 export default class Room extends Model<Room>{
-  @IsUUID(4)
   @PrimaryKey
-  @Column(DataType.STRING)
-  id!: string;
+  @AutoIncrement
+  @Column(DataType.BIGINT)
+  id!: number;
 
   @CreatedAt
   @Column(DataType.DATE)

@@ -13,27 +13,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
-const room_1 = __importDefault(require("./room"));
+const nickname_1 = __importDefault(require("./nickname"));
 const user_1 = __importDefault(require("./user"));
-let Join = class Join extends sequelize_typescript_1.Model {
+let Star = class Star extends sequelize_typescript_1.Model {
 };
 __decorate([
     sequelize_typescript_1.PrimaryKey,
     sequelize_typescript_1.AutoIncrement,
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
     __metadata("design:type", Number)
-], Join.prototype, "id", void 0);
-__decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => room_1.default),
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
-    __metadata("design:type", Number)
-], Join.prototype, "roomId", void 0);
+], Star.prototype, "id", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => user_1.default),
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
     __metadata("design:type", Number)
-], Join.prototype, "userId", void 0);
-Join = __decorate([
-    (0, sequelize_typescript_1.Table)({ tableName: "Join" })
-], Join);
-exports.default = Join;
+], Star.prototype, "userId", void 0);
+__decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => nickname_1.default),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
+    __metadata("design:type", Number)
+], Star.prototype, "nicknameId", void 0);
+Star = __decorate([
+    (0, sequelize_typescript_1.Table)({ tableName: "Star" })
+], Star);
+exports.default = Star;

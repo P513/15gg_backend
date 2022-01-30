@@ -13,10 +13,10 @@ const sequelize_typescript_1 = require("sequelize-typescript");
 let Room = class Room extends sequelize_typescript_1.Model {
 };
 __decorate([
-    (0, sequelize_typescript_1.IsUUID)(4),
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
-    __metadata("design:type", String)
+    sequelize_typescript_1.AutoIncrement,
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
+    __metadata("design:type", Number)
 ], Room.prototype, "id", void 0);
 __decorate([
     sequelize_typescript_1.CreatedAt,
@@ -24,6 +24,6 @@ __decorate([
     __metadata("design:type", Date)
 ], Room.prototype, "createdAt", void 0);
 Room = __decorate([
-    (0, sequelize_typescript_1.Table)({ timestamps: true })
+    (0, sequelize_typescript_1.Table)({ tableName: "Room", timestamps: true })
 ], Room);
 exports.default = Room;

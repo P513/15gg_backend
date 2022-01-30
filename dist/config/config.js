@@ -22,6 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = void 0;
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
+// DB 설정
 exports.config = {
     "development": {
         "username": process.env.DB_USERNAME,

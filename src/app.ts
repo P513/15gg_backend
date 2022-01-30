@@ -9,18 +9,31 @@ import { db } from "./models";
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import passport from 'passport';
+import { passportConfig } from './config/passport';
+import session from 'express-session';
 
 dotenv.config();
 
 const PORT: number = parseInt(process.env.PORT as string, 10);
 const HOST: string = process.env.DB_HOST;
 const app = express();
-// app.set('port', process.env.PORT);
+// passport 설정
+passportConfig();
 
 // Middleware
 app.use(cors());
 app.use(morgan('dev'));
 app.use(cookieParser());
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -28,6 +41,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`Request Occur! ${req.method}, ${req.url}`);
   next();
 })
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Router
 app.use('/auth', auth);

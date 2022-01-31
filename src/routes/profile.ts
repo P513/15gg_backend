@@ -3,5 +3,5 @@ import { NextFunction, Request, Response, Router, } from 'express';
 export const profile = Router();
 
 profile.get('/', (req: Request, res: Response, next: NextFunction) => {
-  console.log('hello, profile!');
+  return res.status(200).send("hello, profile!")
 });

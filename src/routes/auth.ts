@@ -7,9 +7,9 @@ import passport from 'passport';
 import User from '../models/user';
 export const auth = Router();
 
-// auth.get('/', (req: Request, res: Response, next: NextFunction) => {
-//   console.log('hello, auth!');
-// });
+auth.get('/', (req: Request, res: Response, next: NextFunction) => {
+  return res.status(200).send("hello, auth!");
+});
 
 auth.post('/signup', isNotLoggedIn, async (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('signup', async (err: any, _user: User, info: any) => {

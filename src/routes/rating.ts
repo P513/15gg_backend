@@ -3,5 +3,5 @@ import { NextFunction, Request, Response, Router, } from 'express';
 export const rating = Router();
 
 rating.get('/', (req: Request, res: Response, next: NextFunction) => {
-  console.log('hello, rating!');
+  return res.status(200).send("hello, rating!")
 });

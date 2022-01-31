@@ -11,7 +11,7 @@ export function passportConfig() {
     'signup',
     new LocalStrategy({
       usernameField: 'email',
-      passwordField: 'pw',
+      passwordField: 'password',
       session: false,
       passReqToCallback: true,
     },

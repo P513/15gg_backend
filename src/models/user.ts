@@ -1,7 +1,7 @@
 import { Table, Column, Model, DataType, PrimaryKey, IsUUID, CreatedAt, UpdatedAt, DeletedAt, AllowNull, Default, Unique, AutoIncrement } from 'sequelize-typescript';
 
 @Table({ tableName: "User", timestamps: true, paranoid: true })
-export default class User extends Model<User>{
+export default class User extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)

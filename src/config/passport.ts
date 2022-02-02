@@ -12,7 +12,7 @@ export function passportConfig() {
     new LocalStrategy({
       usernameField: 'email',
       passwordField: 'password',
-      session: false,
+      // session: false,
       passReqToCallback: true,
     },
       (async (req, email, password, done) => {
@@ -52,4 +52,28 @@ export function passportConfig() {
         };
       })),
   );
+  passport.use(
+    'login',
+    new LocalStrategy({
+      usernameField: 'email',
+      passwordField: 'password',
+      // session: false,
+      passReqToCallback: true,
+    },
+      (async (req, email, password, done) => {
+        try {
+          const user = await UserRep.findOne({
+            where: {
+              email
+            }
+          });
+          if (!user) return done(null, false, { message: '해당하는 이메일의 사용자가 없습니다' });
+          const key = crypto.pbkdf2Sync(password, user.salt, 100000, 64, 'sha512');
+          if (user.password === key.toString('base64')) return done(null, user);
+          return done(null, false, { message: '비밀번호가 일치하지 않습니다' });
+        } catch (err) {
+          return done(err);
+        }
+      })
+    ));
 };

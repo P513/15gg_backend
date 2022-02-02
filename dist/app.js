@@ -78,6 +78,12 @@ app.use('/auth', auth_1.auth);
 app.use('/myinfo', myinfo_1.myinfo);
 app.use('/profile', profile_1.profile);
 app.use('/rating', rating_1.rating);
+passport_1.default.serializeUser(function (user, done) {
+    done(null, user);
+});
+passport_1.default.deserializeUser(function (user, done) {
+    done(null, user);
+});
 app.listen(PORT, HOST, () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Server Listening on ${HOST}:${PORT}`);
     yield models_1.db.authenticate()

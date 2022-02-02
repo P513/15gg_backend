@@ -41,8 +41,8 @@ const LocalStrategy = passport_local_1.default.Strategy;
 function passportConfig() {
     passport_1.default.use('signup', new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'pw',
-        session: false,
+        passwordField: 'password',
+        // session: false,
         passReqToCallback: true,
     }, ((req, email, password, done) => __awaiter(this, void 0, void 0, function* () {
         try {
@@ -64,25 +64,48 @@ function passportConfig() {
             // 나중에 이메일 인증 코드
             // const emailVeri = await emailVerify(reqBody.email);
             // if (emailVeri === 0) return done(null, false, { message: '이메일 인증이 필요합니다' });
-            // const user = await UserRep.create({
-            //   nicknameId: null,
-            //   password: hashedPW,
-            //   salt,
-            //   email,
-            //   googleOAuth: null,
-            //   kakaoOAuth: null,
-            //   evalCnt: BigInt(0),
-            //   evalSum: BigInt(0),
-            //   createdAt: new Date(),
-            //   updatedAt: null,
-            //   deletedAt: null
-            // });
-            // return done(null, user);
+            const user = yield index_1.UserRep.create({
+                nicknameId: null,
+                password: hashedPW,
+                salt,
+                email,
+                googleOAuth: null,
+                kakaoOAuth: null,
+                evalCnt: BigInt(0),
+                evalSum: BigInt(0),
+                createdAt: new Date(),
+                updatedAt: null,
+                deletedAt: null
+            });
+            return done(null, user);
         }
         catch (err) {
             return done(err);
         }
         ;
+    }))));
+    passport_1.default.use('login', new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password',
+        // session: false,
+        passReqToCallback: true,
+    }, ((req, email, password, done) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const user = yield index_1.UserRep.findOne({
+                where: {
+                    email
+                }
+            });
+            if (!user)
+                return done(null, false, { message: '해당하는 이메일의 사용자가 없습니다' });
+            const key = crypto.pbkdf2Sync(password, user.salt, 100000, 64, 'sha512');
+            if (user.password === key.toString('base64'))
+                return done(null, user);
+            return done(null, false, { message: '비밀번호가 일치하지 않습니다' });
+        }
+        catch (err) {
+            return done(err);
+        }
     }))));
 }
 exports.passportConfig = passportConfig;

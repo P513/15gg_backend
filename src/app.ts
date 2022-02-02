@@ -50,6 +50,14 @@ app.use('/myinfo', myinfo);
 app.use('/profile', profile);
 app.use('/rating', rating);
 
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+
 app.listen(PORT, HOST, async () => {
   console.log(`Server Listening on ${HOST}:${PORT}`);
 

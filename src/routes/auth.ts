@@ -50,3 +50,17 @@ auth.get('/logout', isLoggedIn, (req: Request, res: Response) => {
   });
   return res.status(200).json(middlewares.successTrue('로그아웃되었습니다', null));
 })
+
+auth.get('/kakao', passport.authenticate('kakao-login'));
+auth.get('/kakao/callback', passport.authenticate('kakao-login', {
+  failureRedirect: '/',
+}), (req, res) => {
+  return res.status(200).json(middlewares.successTrue('로그인되었습니다', null));
+});
+
+auth.get('/naver', passport.authenticate('naver-login', { authType: 'reprompt' }));
+auth.get('/naver/callback', passport.authenticate('naver-login', {
+  failureRedirect: '/',
+}), (req, res) => {
+  return res.status(200).json(middlewares.successTrue('로그인되었습니다', null));
+})

@@ -37,7 +37,13 @@ const index_1 = require("./../models/index");
 const passport_1 = __importDefault(require("passport"));
 const passport_local_1 = __importDefault(require("passport-local"));
 const crypto = __importStar(require("crypto"));
+const dotenv = __importStar(require("dotenv"));
+const passport_kakao_1 = require("passport-kakao");
+const passport_naver_v2_1 = require("passport-naver-v2");
+dotenv.config();
 const LocalStrategy = passport_local_1.default.Strategy;
+// const KakaoStrategy = require('passport-kakao').Strategy;
+// const NaverStrategy = require('passport-naver').Strategy;
 function passportConfig() {
     passport_1.default.use('signup', new LocalStrategy({
         usernameField: 'email',
@@ -69,7 +75,7 @@ function passportConfig() {
                 password: hashedPW,
                 salt,
                 email,
-                googleOAuth: null,
+                naverOAuth: null,
                 kakaoOAuth: null,
                 evalCnt: BigInt(0),
                 evalSum: BigInt(0),
@@ -105,6 +111,64 @@ function passportConfig() {
         }
         catch (err) {
             return done(err);
+        }
+    }))));
+    passport_1.default.use('kakao-login', new passport_kakao_1.Strategy({
+        clientID: process.env.KAKAO_ID,
+        clientSecret: "",
+        callbackURL: "/auth/kakao/callback",
+    }, ((accessToken, refreshToken, profile, done) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const exUser = yield index_1.UserRep.findOne({
+                where: { kakaoOAuth: profile.id },
+            });
+            if (exUser) {
+                done(null, exUser);
+            }
+            else {
+                const newUser = yield index_1.UserRep.create({
+                    email: profile._json && profile._json.kakao_account_email,
+                    nicknameId: null,
+                    naverOAuth: null,
+                    kakaoOAuth: profile.id,
+                    createdAt: new Date(),
+                    updatedAt: null,
+                    deletedAt: null
+                });
+                done(null, newUser);
+            }
+        }
+        catch (err) {
+            done(err);
+        }
+    }))));
+    passport_1.default.use('naver-login', new passport_naver_v2_1.Strategy({
+        clientID: process.env.NAVER_ID,
+        clientSecret: process.env.NAVER_SECRET,
+        callbackURL: "/auth/naver/callback"
+    }, ((accessToken, refreshToken, profile, done) => __awaiter(this, void 0, void 0, function* () {
+        try {
+            const exUser = yield index_1.UserRep.findOne({
+                where: { naverOAuth: profile.id },
+            });
+            if (exUser) {
+                done(null, exUser);
+            }
+            else {
+                const newUser = yield index_1.UserRep.create({
+                    email: profile.email,
+                    nicknameId: null,
+                    naverOAuth: profile.id,
+                    kakaoOAuth: null,
+                    createdAt: new Date(),
+                    updatedAt: null,
+                    deletedAt: null
+                });
+                done(null, newUser);
+            }
+        }
+        catch (err) {
+            done(err);
         }
     }))));
 }

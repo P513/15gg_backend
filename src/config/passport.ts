@@ -3,6 +3,10 @@ import { UserRep } from './../models/index';
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import * as crypto from 'crypto';
+import * as dotenv from 'dotenv';
+import { Strategy as KakaoStrategy, Profile as kakaoProfile } from 'passport-kakao';
+import { Strategy as NaverStrategy, Profile as naverProfile } from 'passport-naver-v2';
+dotenv.config();
 
 const LocalStrategy = passportLocal.Strategy;
 
@@ -38,7 +42,7 @@ export function passportConfig() {
             password: hashedPW,
             salt,
             email,
-            googleOAuth: null,
+            naverOAuth: null,
             kakaoOAuth: null,
             evalCnt: BigInt(0),
             evalSum: BigInt(0),
@@ -52,6 +56,7 @@ export function passportConfig() {
         };
       })),
   );
+
   passport.use(
     'login',
     new LocalStrategy({
@@ -76,4 +81,65 @@ export function passportConfig() {
         }
       })
     ));
+
+  passport.use(
+    'kakao-login',
+    new KakaoStrategy({
+      clientID: process.env.KAKAO_ID,
+      clientSecret: "",
+      callbackURL: "/auth/kakao/callback",
+    }, (async (accessToken: string, refreshToken: string, profile: kakaoProfile, done: any) => {
+      try {
+        const exUser = await UserRep.findOne({
+          where: { kakaoOAuth: profile.id },
+        });
+        if (exUser) {
+          done(null, exUser);
+        } else {
+          const newUser = await UserRep.create({
+            email: profile._json && profile._json.kakao_account_email,
+            nicknameId: null,
+            naverOAuth: null,
+            kakaoOAuth: profile.id,
+            createdAt: new Date(),
+            updatedAt: null,
+            deletedAt: null
+          });
+          done(null, newUser);
+        }
+      } catch (err) {
+        done(err);
+      }
+    }))
+  );
+
+  passport.use(
+    'naver-login',
+    new NaverStrategy({
+      clientID: process.env.NAVER_ID,
+      clientSecret: process.env.NAVER_SECRET,
+      callbackURL: "/auth/naver/callback"
+    }, (async (accessToken: string, refreshToken: string, profile: naverProfile, done: any) => {
+      try {
+        const exUser = await UserRep.findOne({
+          where: { naverOAuth: profile.id },
+        });
+        if (exUser) {
+          done(null, exUser);
+        } else {
+          const newUser = await UserRep.create({
+            email: profile.email,
+            nicknameId: null,
+            naverOAuth: profile.id,
+            kakaoOAuth: null,
+            createdAt: new Date(),
+            updatedAt: null,
+            deletedAt: null
+          });
+          done(null, newUser);
+        }
+      } catch (err) {
+        done(err);
+      }
+    })))
 };

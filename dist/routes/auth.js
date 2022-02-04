@@ -79,3 +79,15 @@ exports.auth.get('/logout', middlewares_1.isLoggedIn, (req, res) => {
     });
     return res.status(200).json(middlewares.successTrue('로그아웃되었습니다', null));
 });
+exports.auth.get('/kakao', passport_1.default.authenticate('kakao-login'));
+exports.auth.get('/kakao/callback', passport_1.default.authenticate('kakao-login', {
+    failureRedirect: '/',
+}), (req, res) => {
+    return res.status(200).json(middlewares.successTrue('로그인되었습니다', null));
+});
+exports.auth.get('/naver', passport_1.default.authenticate('naver-login', { authType: 'reprompt' }));
+exports.auth.get('/naver/callback', passport_1.default.authenticate('naver-login', {
+    failureRedirect: '/',
+}), (req, res) => {
+    return res.status(200).json(middlewares.successTrue('로그인되었습니다', null));
+});

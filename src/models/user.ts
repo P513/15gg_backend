@@ -27,7 +27,7 @@ export default class User extends Model {
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  googleOAuth!: string;
+  naverOAuth!: string;
 
   @AllowNull(true)
   @Column(DataType.STRING)

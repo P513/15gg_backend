@@ -36,7 +36,8 @@ const express_1 = require("express");
 const middlewares_1 = require("./middlewares");
 const passport_1 = __importDefault(require("passport"));
 const classes = __importStar(require("../config/classes"));
-const middlewares = __importStar(require("./middlewares"));
+const index_1 = require("../models/index");
+const crypto = __importStar(require("crypto"));
 exports.auth = (0, express_1.Router)();
 exports.auth.get('/', (req, res, next) => {
     return res.status(200).send("hello, auth!");
@@ -44,50 +45,89 @@ exports.auth.get('/', (req, res, next) => {
 exports.auth.post('/signup', middlewares_1.isNotLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     passport_1.default.authenticate('signup', (err, _user, info) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
-            return res.status(403).json(middlewares.successFalse(err, '', null));
+            return res.status(403).json((0, middlewares_1.successFalse)(err, '', null));
         }
         if (info) {
-            return res.status(403).json(middlewares.successFalse(null, info, null));
+            return res.status(403).json((0, middlewares_1.successFalse)(null, info, null));
         }
         if (_user) {
             const user = new classes.UserInfo(_user);
-            return res.status(200).json(middlewares.successTrue('회원가입을 완료하였습니다', user));
+            return res.status(200).json((0, middlewares_1.successTrue)('회원가입을 완료하였습니다', user));
         }
     }))(req, res, next);
 }));
 exports.auth.post('/login', middlewares_1.isNotLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     passport_1.default.authenticate('login', (err, _user, info) => {
         if (err || !_user) {
-            return res.status(403).json(middlewares.successFalse(err, '', null));
+            return res.status(403).json((0, middlewares_1.successFalse)(err, '', null));
         }
         if (info) {
-            return res.status(403).json(middlewares.successFalse(null, '아이디나 비밀번호를 확인하세요', null));
+            return res.status(403).json((0, middlewares_1.successFalse)(null, '아이디나 비밀번호를 확인하세요', null));
         }
         return req.login(_user, (err) => __awaiter(void 0, void 0, void 0, function* () {
             if (err) {
                 console.log(err);
-                return res.status(403).json(middlewares.successFalse(err, '로그인에 실패했습니다', null));
+                return res.status(403).json((0, middlewares_1.successFalse)(err, '로그인에 실패했습니다', null));
             }
-            return res.status(200).json(middlewares.successTrue('로그인되었습니다', _user));
+            req.session.userId = _user.id;
+            return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', _user));
         }));
     })(req, res, next);
 }));
 exports.auth.get('/logout', middlewares_1.isLoggedIn, (req, res) => {
+    if (req.session.userId) {
+        req.session.destroy(function (err) {
+            if (err) {
+                return res.status(403).json((0, middlewares_1.successFalse)(err, '세션 삭제에 실패했습니다', null));
+            }
+        });
+    }
     req.logout();
-    req.session.destroy(function () {
-        req.session;
-    });
-    return res.status(200).json(middlewares.successTrue('로그아웃되었습니다', null));
+    return res.status(200).json((0, middlewares_1.successTrue)('로그아웃되었습니다', null));
 });
-exports.auth.get('/kakao', passport_1.default.authenticate('kakao-login'));
+exports.auth.get('/kakao', passport_1.default.authenticate('kakao-login', (req, _user) => {
+    if (_user) {
+        req.session.userId = _user.id;
+    }
+}));
 exports.auth.get('/kakao/callback', passport_1.default.authenticate('kakao-login', {
     failureRedirect: '/',
 }), (req, res) => {
-    return res.status(200).json(middlewares.successTrue('로그인되었습니다', null));
+    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', null));
 });
-exports.auth.get('/naver', passport_1.default.authenticate('naver-login', { authType: 'reprompt' }));
+exports.auth.get('/naver', passport_1.default.authenticate('naver-login', { authType: 'reprompt' }, (req, _user) => {
+    if (_user) {
+        req.session.userId = _user.id;
+    }
+}));
 exports.auth.get('/naver/callback', passport_1.default.authenticate('naver-login', {
     failureRedirect: '/',
 }), (req, res) => {
-    return res.status(200).json(middlewares.successTrue('로그인되었습니다', null));
+    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', null));
 });
+exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const reqBody = req.body;
+    const password = reqBody.password;
+    try {
+        const user = yield index_1.UserRep.findOne({
+            where: {
+                id: req.session.userId
+            }
+        });
+        if (!user)
+            return res.status(404).json((0, middlewares_1.successFalse)(null, '존재하지 않는 사용자입니다', null));
+        const key = crypto.pbkdf2Sync(password, user.salt, 100000, 64, 'sha512');
+        if (user.password === key.toString('base64')) {
+            yield user.destroy({ force: true });
+            req.logout();
+            req.session.destroy(function () {
+                req.session;
+            });
+            return res.status(200).json((0, middlewares_1.successTrue)('회원 삭제가 완료되었습니다', null));
+        }
+        return res.status(403).json((0, middlewares_1.successFalse)(null, '비밀번호가 일치하지 않습니다', null));
+    }
+    catch (err) {
+        return res.status(403).json((0, middlewares_1.successFalse)(err, '', null));
+    }
+}));

@@ -1,3 +1,4 @@
+import { NicknameRep } from './../models/index';
 import { NextFunction, Request, Response, Router, } from 'express';
 import { isNotLoggedIn, isLoggedIn, successFalse, successTrue } from './middlewares';
 import passport from 'passport';
@@ -90,6 +91,14 @@ auth.delete('/signout', isLoggedIn, async (req: Request, res: Response) => {
     if (!user) return res.status(404).json(successFalse(null, '존재하지 않는 사용자입니다', null));
     const key = crypto.pbkdf2Sync(password, user.salt, 100000, 64, 'sha512');
     if (user.password === key.toString('base64')) {
+      if (user.nicknameId) {
+        await NicknameRep.destroy({
+          where: {
+            id: user.nicknameId,
+            userId: user.id
+          }
+        });
+      }
       await user.destroy({ force: true });
       req.logout();
       req.session.destroy(function () {

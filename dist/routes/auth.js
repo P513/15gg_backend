@@ -32,11 +32,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
+const index_1 = require("./../models/index");
 const express_1 = require("express");
 const middlewares_1 = require("./middlewares");
 const passport_1 = __importDefault(require("passport"));
 const classes = __importStar(require("../config/classes"));
-const index_1 = require("../models/index");
+const index_2 = require("../models/index");
 const crypto = __importStar(require("crypto"));
 exports.auth = (0, express_1.Router)();
 exports.auth.get('/', (req, res, next) => {
@@ -105,11 +106,12 @@ exports.auth.get('/naver/callback', passport_1.default.authenticate('naver-login
 }), (req, res) => {
     return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', null));
 });
+// 닉네임 있으면 지우는 코드 추가하기
 exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reqBody = req.body;
     const password = reqBody.password;
     try {
-        const user = yield index_1.UserRep.findOne({
+        const user = yield index_2.UserRep.findOne({
             where: {
                 id: req.session.userId
             }
@@ -118,6 +120,14 @@ exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaite
             return res.status(404).json((0, middlewares_1.successFalse)(null, '존재하지 않는 사용자입니다', null));
         const key = crypto.pbkdf2Sync(password, user.salt, 100000, 64, 'sha512');
         if (user.password === key.toString('base64')) {
+            if (user.nicknameId) {
+                yield index_1.NicknameRep.destroy({
+                    where: {
+                        id: user.nicknameId,
+                        userId: user.id
+                    }
+                });
+            }
             yield user.destroy({ force: true });
             req.logout();
             req.session.destroy(function () {

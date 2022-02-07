@@ -1,3 +1,4 @@
+import { UserRep } from './../models/index';
 import { Request, Response, NextFunction } from "express";
 
 export function isLoggedIn(req: Request, res: Response, next: NextFunction) {
@@ -34,4 +35,17 @@ export function successFalse(err: any, message: string, data: any) {
     errors: err || null,
     data,
   };
+}
+
+export async function hasNickname(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = await UserRep.findOne({
+      where: { id: req.session.userId }
+    });
+    if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
+    if (!user.nicknameId) return res.status(403).json(successFalse(null, '닉네임 등록이 필요합니다', null));
+    next();
+  } catch (err) {
+    return res.status(403).json(successFalse(err, '', null));
+  }
 }

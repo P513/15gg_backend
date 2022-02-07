@@ -4,6 +4,72 @@ import { hasNickname, hasNoNickname, isLoggedIn, successFalse, successTrue } fro
 
 export const myinfo = Router();
 
+// 해당 유저의 nickname(info) API
+myinfo.get('/', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await UserRep.findOne({
+      where: {
+        id: req.session.userId
+      }
+    });
+    if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
+    const nickname = await NicknameRep.findOne({
+      where: {
+        id: user.nicknameId,
+        userId: user.id
+      }
+    });
+    if (!nickname) return res.status(403).json(successFalse(null, '해당 유저의 닉네임이 존재하지 않습니다', null));
+    return res.status(200).json(successTrue('해당 유저의 정보입니다', nickname));
+  } catch (err) {
+    return res.status(403).json(successFalse(err, '', null));
+  }
+});
+
+// 해당 유저의 nickname(info)의 설명 수정 API
+myinfo.patch('/', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const reqBody = req.body;
+    const user = await UserRep.findOne({
+      where: {
+        id: req.session.userId
+      }
+    });
+    if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
+    const nickname = await NicknameRep.findOne({
+      where: {
+        id: user.nicknameId,
+        userId: user.id
+      }
+    });
+    if (!nickname) return res.status(403).json(successFalse(null, '해당 유저의 닉네임이 존재하지 않습니다', null));
+    const ment = (reqBody.ment) ? reqBody.ment : nickname.ment;
+    const selfPos = (reqBody.selfPos) ? reqBody.selfPos : nickname.selfPos;
+    if (selfPos == null || selfPos < 1 || selfPos > 5) return res.status(403).json(successFalse(null, '선호 포지션을 입력해주세요', null));
+    const duoPos = (reqBody.duoPos) ? reqBody.duoPos : nickname.duoPos;
+    if (duoPos == null || duoPos < 1 || duoPos > 5) return res.status(403).json(successFalse(null, '듀오 희망 포지션을 입력해주세요', null));
+    if (selfPos === duoPos) return res.status(403).json(successFalse(null, '선호 포지션과 듀오 희망 포지션이 일치합니다', null));
+    const playStyle = (reqBody.playStyle) ? reqBody.playStyle : nickname.playStyle;
+    if (playStyle == null || playStyle < 1 || playStyle > 3) return res.status(403).json(successFalse(null, '희망 플레이 스타일을 입력해주세요', null));
+    const voice = (reqBody.voice) ? reqBody.voice : nickname.voice;
+    if (voice == null || voice < 0 || voice > 1) return res.status(403).json(successFalse(null, '보이스 유무를 입력해주세요', null));
+    const status = (reqBody.status) ? reqBody.status : nickname.status;
+    if (status == null || status < 0 || status > 1) return res.status(403).json(successFalse(null, '듀오 모집 상태를 입력해주세요', null));
+    nickname.update({
+      ment,
+      selfPos,
+      duoPos,
+      playStyle,
+      voice,
+      status,
+      updatedAt: new Date()
+    });
+    return res.status(200).json(successTrue('해당 유저의 정보가 수정되었습니다', nickname));
+  } catch (err) {
+    return res.status(403).json(successFalse(err, '', null));
+  }
+})
+
 // nickname 존재 여부 API
 myinfo.get('/nickname', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -26,7 +92,7 @@ myinfo.get('/nickname', isLoggedIn, hasNickname, async (req: Request, res: Respo
   }
 });
 
-// 닉네임 최초 등록 API
+// 닉네임 최초 등록 API(시작 시 필수!)
 myinfo.post('/nickname', isLoggedIn, hasNoNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const reqBody = req.body;
@@ -37,23 +103,23 @@ myinfo.post('/nickname', isLoggedIn, hasNoNickname, async (req: Request, res: Re
     });
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     const name = reqBody.name as string;
-    if (!name) return res.status(403).json(successFalse(null, '닉네임 이름을 입력해주세요', null));
+    if (name == null) return res.status(403).json(successFalse(null, '닉네임 이름을 입력해주세요', null));
     const tier = reqBody.tier as string;
-    if (!tier) return res.status(403).json(successFalse(null, '티어를 입력해주세요', null));
+    if (tier == null) return res.status(403).json(successFalse(null, '티어를 입력해주세요', null));
     const rank = reqBody.rank as string;
-    if (!rank) return res.status(403).json(successFalse(null, '랭크를 입력해주세요', null));
+    if (rank == null) return res.status(403).json(successFalse(null, '랭크를 입력해주세요', null));
     const ment = reqBody.ment as string;
     const selfPos = reqBody.selfPos as number;
-    if (!selfPos || selfPos < 1 || selfPos > 5) return res.status(403).json(successFalse(null, '선호 포지션을 입력해주세요', null));
+    if (selfPos == null || selfPos < 1 || selfPos > 5) return res.status(403).json(successFalse(null, '선호 포지션을 입력해주세요', null));
     const duoPos = reqBody.duoPos as number;
-    if (!duoPos || duoPos < 1 || duoPos > 5) return res.status(403).json(successFalse(null, '듀오 희망 포지션을 입력해주세요', null));
+    if (duoPos == null || duoPos < 1 || duoPos > 5) return res.status(403).json(successFalse(null, '듀오 희망 포지션을 입력해주세요', null));
     if (duoPos === selfPos) return res.status(403).json(successFalse(null, '선호 포지션과 듀오 희망 포지션이 일치합니다', null));
     const playStyle = reqBody.playStyle as number;
-    if (!playStyle || playStyle < 1 || playStyle > 3) return res.status(403).json(successFalse(null, '희망 플레이 스타일을 입력해주세요', null));
+    if (playStyle == null || playStyle < 1 || playStyle > 3) return res.status(403).json(successFalse(null, '희망 플레이 스타일을 입력해주세요', null));
     const voice = reqBody.voice as number;
-    if (!voice || voice < 0 || voice > 1) return res.status(403).json(successFalse(null, '보이스 유무를 입력해주세요', null));
+    if (voice == null || voice < 0 || voice > 1) return res.status(403).json(successFalse(null, '보이스 유무를 입력해주세요', null));
     const status = reqBody.status as number;
-    if (!status || status < 0 || status > 1) return res.status(403).json(successFalse(null, '듀오 모집 상태를 입력해주세요', null));
+    if (status == null || status < 0 || status > 1) return res.status(403).json(successFalse(null, '듀오 모집 상태를 입력해주세요', null));
     const exNickname = await NicknameRep.findOne({
       where: {
         name
@@ -84,6 +150,7 @@ myinfo.post('/nickname', isLoggedIn, hasNoNickname, async (req: Request, res: Re
   }
 });
 
+// 해당 유저의 nickname(info)의 닉네임 수정 API
 myinfo.put('/nickname', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const reqBody = req.body;

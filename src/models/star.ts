@@ -3,7 +3,7 @@ import Nickname from './nickname';
 import User from './user';
 
 @Table({ tableName: "Star" })
-export default class Star extends Model<Star>{
+export default class Star extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)

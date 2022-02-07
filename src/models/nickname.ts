@@ -2,7 +2,7 @@ import { Table, Column, Model, HasMany, ForeignKey, PrimaryKey, IsUUID, DataType
 import User from './user';
 
 @Table({ tableName: "Nickname" })
-export default class Nickname extends Model<Nickname>{
+export default class Nickname extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)

@@ -3,7 +3,7 @@ import Room from './room';
 import User from './user';
 
 @Table({ tableName: "Chat", timestamps: true })
-export default class Chat extends Model<Chat>{
+export default class Chat extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)

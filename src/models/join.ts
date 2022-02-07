@@ -3,7 +3,7 @@ import Room from './room';
 import User from './user';
 
 @Table({ tableName: "Join" })
-export default class Join extends Model<Join>{
+export default class Join extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.BIGINT)

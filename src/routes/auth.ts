@@ -24,7 +24,7 @@ auth.post('/signup', isNotLoggedIn, async (req: Request, res: Response, next: Ne
       return res.status(200).json(successTrue('회원가입을 완료하였습니다', user));
     }
   })(req, res, next);
-})
+});
 
 auth.post('/login', isNotLoggedIn, async (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('login', (err: any, _user: User, info: any) => {
@@ -43,7 +43,7 @@ auth.post('/login', isNotLoggedIn, async (req: Request, res: Response, next: Nex
       return res.status(200).json(successTrue('로그인되었습니다', _user));
     })
   })(req, res, next);
-})
+});
 
 auth.get('/logout', isLoggedIn, (req: Request, res: Response) => {
   if (req.session.userId) {
@@ -53,7 +53,7 @@ auth.get('/logout', isLoggedIn, (req: Request, res: Response) => {
   }
   req.logout();
   return res.status(200).json(successTrue('로그아웃되었습니다', null));
-})
+});
 
 auth.get('/kakao', passport.authenticate('kakao-login', (req: Request, _user: User) => {
   if (_user) {
@@ -75,8 +75,9 @@ auth.get('/naver/callback', passport.authenticate('naver-login', {
   failureRedirect: '/',
 }), (req, res) => {
   return res.status(200).json(successTrue('로그인되었습니다', null));
-})
+});
 
+// 닉네임 있으면 지우는 코드 추가하기
 auth.delete('/signout', isLoggedIn, async (req: Request, res: Response) => {
   const reqBody = req.body;
   const password = reqBody.password as string;
@@ -100,4 +101,4 @@ auth.delete('/signout', isLoggedIn, async (req: Request, res: Response) => {
   } catch (err) {
     return res.status(403).json(successFalse(err, '', null));
   }
-})
+});

@@ -49,3 +49,16 @@ export async function hasNickname(req: Request, res: Response, next: NextFunctio
     return res.status(403).json(successFalse(err, '', null));
   }
 }
+
+export async function hasNoNickname(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = await UserRep.findOne({
+      where: { id: req.session.userId }
+    });
+    if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
+    if (user.nicknameId) return res.status(403).json(successFalse(null, '이미 닉네임 등록이 된 아이디입니다', null));
+    next();
+  } catch (err) {
+    return res.status(403).json(successFalse(err, '', null));
+  }
+}

@@ -22,7 +22,7 @@ rating.get('/', isLoggedIn, hasNickname, async (req: Request, res: Response, nex
   } catch (err) {
     return res.status(403).json(successFalse(err, '', null));
   }
-})
+});
 
 // 평점 설정 API
 /**************************************************

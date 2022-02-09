@@ -40,4 +40,12 @@ export default class Nickname extends Model {
 
   @Column(DataType.BOOLEAN)
   status!: boolean;
+
+  @Default(0)
+  @Column(DataType.BIGINT)
+  evalCnt!: bigint;
+
+  @Default(0)
+  @Column(DataType.BIGINT)
+  evalSum!: bigint;
 }

@@ -33,14 +33,6 @@ export default class User extends Model {
   @Column(DataType.STRING)
   kakaoOAuth!: string;
 
-  @Default(0)
-  @Column(DataType.BIGINT)
-  evalCnt!: bigint;
-
-  @Default(0)
-  @Column(DataType.BIGINT)
-  evalSum!: bigint;
-
   @CreatedAt
   @Column(DataType.DATE)
   createdAt!: Date;

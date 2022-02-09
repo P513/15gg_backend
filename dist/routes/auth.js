@@ -40,9 +40,7 @@ const classes = __importStar(require("../config/classes"));
 const index_2 = require("../models/index");
 const crypto = __importStar(require("crypto"));
 exports.auth = (0, express_1.Router)();
-exports.auth.get('/', (req, res, next) => {
-    return res.status(200).send("hello, auth!");
-});
+// 회원가입 API
 exports.auth.post('/signup', middlewares_1.isNotLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     passport_1.default.authenticate('signup', (err, _user, info) => __awaiter(void 0, void 0, void 0, function* () {
         if (err) {
@@ -57,6 +55,7 @@ exports.auth.post('/signup', middlewares_1.isNotLoggedIn, (req, res, next) => __
         }
     }))(req, res, next);
 }));
+// 로그인 API
 exports.auth.post('/login', middlewares_1.isNotLoggedIn, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     passport_1.default.authenticate('login', (err, _user, info) => {
         if (err || !_user) {
@@ -75,6 +74,7 @@ exports.auth.post('/login', middlewares_1.isNotLoggedIn, (req, res, next) => __a
         }));
     })(req, res, next);
 }));
+// 로그아웃 API
 exports.auth.get('/logout', middlewares_1.isLoggedIn, (req, res) => {
     if (req.session.userId) {
         req.session.destroy(function (err) {
@@ -86,6 +86,7 @@ exports.auth.get('/logout', middlewares_1.isLoggedIn, (req, res) => {
     req.logout();
     return res.status(200).json((0, middlewares_1.successTrue)('로그아웃되었습니다', null));
 });
+// 카카오 로그인 API
 exports.auth.get('/kakao', passport_1.default.authenticate('kakao-login', (req, _user) => {
     if (_user) {
         req.session.userId = _user.id;
@@ -96,6 +97,7 @@ exports.auth.get('/kakao/callback', passport_1.default.authenticate('kakao-login
 }), (req, res) => {
     return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', null));
 });
+// 네이버 로그인 API
 exports.auth.get('/naver', passport_1.default.authenticate('naver-login', { authType: 'reprompt' }, (req, _user) => {
     if (_user) {
         req.session.userId = _user.id;
@@ -106,7 +108,7 @@ exports.auth.get('/naver/callback', passport_1.default.authenticate('naver-login
 }), (req, res) => {
     return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', null));
 });
-// 닉네임 있으면 지우는 코드 추가하기
+// 회원탈퇴 API
 exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reqBody = req.body;
     const password = reqBody.password;

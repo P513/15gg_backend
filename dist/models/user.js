@@ -49,16 +49,6 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "kakaoOAuth", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Default)(0),
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
-    __metadata("design:type", typeof BigInt === "function" ? BigInt : Object)
-], User.prototype, "evalCnt", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Default)(0),
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.BIGINT),
-    __metadata("design:type", typeof BigInt === "function" ? BigInt : Object)
-], User.prototype, "evalSum", void 0);
-__decorate([
     sequelize_typescript_1.CreatedAt,
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
     __metadata("design:type", Date)

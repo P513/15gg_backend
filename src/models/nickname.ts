@@ -42,10 +42,10 @@ export default class Nickname extends Model {
   status!: boolean;
 
   @Default(0)
-  @Column(DataType.BIGINT)
-  evalCnt!: bigint;
+  @Column(DataType.INTEGER)
+  evalCnt!: number;
 
   @Default(0)
-  @Column(DataType.BIGINT)
-  evalSum!: bigint;
+  @Column(DataType.INTEGER)
+  evalSum!: number;
 }

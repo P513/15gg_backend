@@ -44,8 +44,8 @@ export function passportConfig() {
             email,
             naverOAuth: null,
             kakaoOAuth: null,
-            evalCnt: BigInt(0),
-            evalSum: BigInt(0),
+            evalCnt: 0,
+            evalSum: 0,
             createdAt: new Date(),
             updatedAt: null,
             deletedAt: null

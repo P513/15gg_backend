@@ -8,10 +8,7 @@ import { UserRep } from '../models/index';
 import * as crypto from 'crypto';
 export const auth = Router();
 
-auth.get('/', (req: Request, res: Response, next: NextFunction) => {
-  return res.status(200).send("hello, auth!");
-});
-
+// 회원가입 API
 auth.post('/signup', isNotLoggedIn, async (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('signup', async (err: any, _user: User, info: any) => {
     if (err) {
@@ -27,6 +24,7 @@ auth.post('/signup', isNotLoggedIn, async (req: Request, res: Response, next: Ne
   })(req, res, next);
 });
 
+// 로그인 API
 auth.post('/login', isNotLoggedIn, async (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('login', (err: any, _user: User, info: any) => {
     if (err || !_user) {
@@ -46,6 +44,7 @@ auth.post('/login', isNotLoggedIn, async (req: Request, res: Response, next: Nex
   })(req, res, next);
 });
 
+// 로그아웃 API
 auth.get('/logout', isLoggedIn, (req: Request, res: Response) => {
   if (req.session.userId) {
     req.session.destroy(function (err) {
@@ -56,6 +55,7 @@ auth.get('/logout', isLoggedIn, (req: Request, res: Response) => {
   return res.status(200).json(successTrue('로그아웃되었습니다', null));
 });
 
+// 카카오 로그인 API
 auth.get('/kakao', passport.authenticate('kakao-login', (req: Request, _user: User) => {
   if (_user) {
     req.session.userId = _user.id;
@@ -67,6 +67,7 @@ auth.get('/kakao/callback', passport.authenticate('kakao-login', {
   return res.status(200).json(successTrue('로그인되었습니다', null));
 });
 
+// 네이버 로그인 API
 auth.get('/naver', passport.authenticate('naver-login', { authType: 'reprompt' }, (req: Request, _user: User) => {
   if (_user) {
     req.session.userId = _user.id;
@@ -78,7 +79,7 @@ auth.get('/naver/callback', passport.authenticate('naver-login', {
   return res.status(200).json(successTrue('로그인되었습니다', null));
 });
 
-// 닉네임 있으면 지우는 코드 추가하기
+// 회원탈퇴 API
 auth.delete('/signout', isLoggedIn, async (req: Request, res: Response) => {
   const reqBody = req.body;
   const password = reqBody.password as string;

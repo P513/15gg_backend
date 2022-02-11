@@ -46,14 +46,19 @@ const passport_1 = __importDefault(require("passport"));
 const passport_2 = require("./config/passport");
 const express_session_1 = __importDefault(require("express-session"));
 dotenv.config();
-const PORT = parseInt(process.env.PORT, 10);
-const HOST = process.env.DB_HOST;
+const WEB_PORT = parseInt(process.env.WEB_PORT, 10);
+const HOST = process.env.NODE_ENV === 'dev' ? process.env.DEV_DB_HOST : process.env.PROD_DB_HOST;
 const app = (0, express_1.default)();
 // passport 설정
 (0, passport_2.passportConfig)();
+if (process.env.NODE_ENV === 'prod') {
+    app.use((0, morgan_1.default)('combined'));
+}
+else {
+    app.use((0, morgan_1.default)('dev'));
+}
 // Middleware
 app.use((0, cors_1.default)());
-app.use((0, morgan_1.default)('dev'));
 app.use((0, cookie_parser_1.default)());
 app.use((0, express_session_1.default)({
     resave: false,
@@ -84,8 +89,8 @@ passport_1.default.serializeUser(function (user, done) {
 passport_1.default.deserializeUser(function (user, done) {
     done(null, user);
 });
-app.listen(PORT, HOST, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`Server Listening on ${HOST}:${PORT}`);
+app.listen(WEB_PORT, HOST, () => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(`Server Listening on ${HOST}:${WEB_PORT}`);
     yield models_1.db.authenticate()
         .then(() => __awaiter(void 0, void 0, void 0, function* () {
         console.log("Connection Success");

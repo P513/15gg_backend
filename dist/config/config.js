@@ -25,16 +25,22 @@ dotenv.config();
 // DB 설정
 exports.config = {
     "development": {
-        "username": process.env.DB_USERNAME,
-        "password": process.env.DB_PASSWORD,
-        "database": process.env.DB_DBNAME,
-        "host": process.env.DB_HOST,
-        "port": parseInt(process.env.DB_PORT, 10),
+        "username": process.env.DEV_DB_USERNAME,
+        "password": process.env.DEV_DB_PASSWORD,
+        "database": process.env.DEV_DB_DBNAME,
+        "host": process.env.DEV_DB_HOST,
+        "port": parseInt(process.env.DEV_DB_PORT, 10),
         "dialect": "mysql",
         "timezone": '+09:00',
     },
-    // "test": {
-    // }
-    // "production": {
-    // }
+    "production": {
+        "username": process.env.PROD_DB_USERNAME,
+        "password": process.env.PROD_DB_PASSWORD,
+        "database": process.env.PROD_DB_DBNAME,
+        "host": process.env.PROD_DB_HOST,
+        "port": parseInt(process.env.PROD_DB_PORT, 10),
+        "dialect": "mysql",
+        "timezone": '+09:00',
+        "logging": false,
+    }
 };

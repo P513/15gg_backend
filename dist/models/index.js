@@ -12,9 +12,13 @@ const join_1 = __importDefault(require("./join"));
 const nickname_1 = __importDefault(require("./nickname"));
 const room_1 = __importDefault(require("./room"));
 const star_1 = __importDefault(require("./star"));
-exports.db = new sequelize_typescript_1.Sequelize(config_1.config.development.database, config_1.config.development.username, config_1.config.development.password, {
+exports.db = process.env.NODE_ENV === 'dev' ? new sequelize_typescript_1.Sequelize(config_1.config.development.database, config_1.config.development.username, config_1.config.development.password, {
     host: config_1.config.development.host,
     port: config_1.config.development.port,
+    dialect: 'mysql',
+}) : new sequelize_typescript_1.Sequelize(config_1.config.production.database, config_1.config.production.username, config_1.config.production.password, {
+    host: config_1.config.production.host,
+    port: config_1.config.production.port,
     dialect: 'mysql',
 });
 exports.db.addModels([user_1.default]);

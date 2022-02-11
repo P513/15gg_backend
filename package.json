@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "dev": "nodemon --exec ts-node --files src/app.ts",
-    "start": "node dist/app.js",
+    "start": "cross-env NODE_ENV=dev pm2 start --interpreter node_modules/.bin/ts-node src/app.ts --watch",
     "test": "jest --detectOpenHandles --forceExit"
   },
   "repository": {
@@ -25,6 +25,7 @@
     "body-parser": "^1.19.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
@@ -37,6 +38,7 @@
     "passport-local": "^1.0.0",
     "passport-naver": "^1.0.6",
     "passport-naver-v2": "^2.0.8",
+    "pm2": "^5.1.2",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.13.0",
     "sequelize-cli": "^6.3.0",
@@ -58,7 +60,7 @@
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
-    "ts-node": "^10.4.0",
+    "ts-node": "^10.5.0",
     "typescript": "^4.5.4"
   }
 }

@@ -7,13 +7,22 @@ import Nickname from './nickname';
 import Room from './room';
 import Star from './star';
 
-export const db: Sequelize = new Sequelize(
+export const db: Sequelize = process.env.NODE_ENV === 'dev' ? new Sequelize(
   config.development.database,
   config.development.username,
   config.development.password,
   {
     host: config.development.host,
     port: config.development.port,
+    dialect: 'mysql',
+  }
+) : new Sequelize(
+  config.production.database,
+  config.production.username,
+  config.production.password,
+  {
+    host: config.production.host,
+    port: config.production.port,
     dialect: 'mysql',
   }
 );

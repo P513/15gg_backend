@@ -15,15 +15,20 @@ import session from 'express-session';
 
 dotenv.config();
 
-const PORT: number = parseInt(process.env.PORT as string, 10);
-const HOST: string = process.env.DB_HOST;
+const WEB_PORT: number = parseInt(process.env.WEB_PORT as string, 10);
+const HOST: string = process.env.NODE_ENV === 'dev' ? process.env.DEV_DB_HOST : process.env.PROD_DB_HOST;
 const app = express();
 // passport 설정
 passportConfig();
 
+if (process.env.NODE_ENV === 'prod') {
+  app.use(morgan('combined'));
+} else {
+  app.use(morgan('dev'));
+}
+
 // Middleware
 app.use(cors());
-app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(session({
   resave: false,
@@ -58,8 +63,8 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
-app.listen(PORT, HOST, async () => {
-  console.log(`Server Listening on ${HOST}:${PORT}`);
+app.listen(WEB_PORT, HOST, async () => {
+  console.log(`Server Listening on ${HOST}:${WEB_PORT}`);
 
   await db.authenticate()
     .then(async () => {
@@ -68,4 +73,4 @@ app.listen(PORT, HOST, async () => {
     .catch((e) => {
       console.log("Connection Failed. Reason: ", e);
     })
-})
+});

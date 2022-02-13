@@ -6,6 +6,7 @@ import Join from './join';
 import Nickname from './nickname';
 import Room from './room';
 import Star from './star';
+import Block from './block';
 
 export const db: Sequelize = process.env.NODE_ENV === 'dev' ? new Sequelize(
   config.development.database,
@@ -33,6 +34,7 @@ db.addModels([Chat]);
 db.addModels([Join]);
 db.addModels([Nickname]);
 db.addModels([Star]);
+db.addModels([Block]);
 
 // https://github.com/RobinBuschmann/sequelize-typescript
 export const UserRep = db.getRepository(User);
@@ -41,3 +43,4 @@ export const ChatRep = db.getRepository(Chat);
 export const JoinRep = db.getRepository(Join);
 export const NicknameRep = db.getRepository(Nickname);
 export const StarRep = db.getRepository(Star);
+export const BlockRep = db.getRepository(Block);

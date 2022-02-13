@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "dev": "nodemon --exec ts-node --files src/app.ts",
-    "start": "cross-env NODE_ENV=dev pm2 start --interpreter node_modules/.bin/ts-node src/app.ts --watch",
+    "start": "cross-env NODE_ENV=prod pm2 start --interpreter node_modules/.bin/ts-node src/app.ts --watch",
     "test": "jest --detectOpenHandles --forceExit"
   },
   "repository": {

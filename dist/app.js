@@ -47,7 +47,7 @@ const passport_2 = require("./config/passport");
 const express_session_1 = __importDefault(require("express-session"));
 dotenv.config();
 const WEB_PORT = parseInt(process.env.WEB_PORT, 10);
-const HOST = process.env.NODE_ENV === 'dev' ? process.env.DEV_DB_HOST : process.env.PROD_DB_HOST;
+const HOST = process.env.NODE_ENV === 'dev' ? process.env.DEV_DB_HOST : process.env.PROD_HOST;
 const app = (0, express_1.default)();
 // passport 설정
 (0, passport_2.passportConfig)();

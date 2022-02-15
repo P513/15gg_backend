@@ -16,7 +16,7 @@ import session from 'express-session';
 dotenv.config();
 
 const WEB_PORT: number = parseInt(process.env.WEB_PORT as string, 10);
-const HOST: string = process.env.NODE_ENV === 'dev' ? process.env.DEV_DB_HOST : process.env.PROD_DB_HOST;
+const HOST: string = process.env.NODE_ENV === 'dev' ? process.env.DEV_DB_HOST : process.env.PROD_HOST;
 const app = express();
 // passport 설정
 passportConfig();

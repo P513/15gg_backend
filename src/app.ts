@@ -42,12 +42,12 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`Request Occur! ${req.method}, ${req.url}`);
   next();
-})
-app.use(passport.initialize());
-app.use(passport.session());
+});
 
 // Router
 app.use('/auth', auth);

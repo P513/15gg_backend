@@ -72,12 +72,12 @@ app.use((0, express_session_1.default)({
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
+app.use(passport_1.default.initialize());
+app.use(passport_1.default.session());
 app.use((req, res, next) => {
     console.log(`Request Occur! ${req.method}, ${req.url}`);
     next();
 });
-app.use(passport_1.default.initialize());
-app.use(passport_1.default.session());
 // Router
 app.use('/auth', auth_1.auth);
 app.use('/myinfo', myinfo_1.myinfo);

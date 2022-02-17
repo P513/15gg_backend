@@ -17,11 +17,11 @@ export default class Nickname extends Model {
   @Column(DataType.STRING)
   name!: string;
 
-  @Column(DataType.STRING)
-  tier!: string;
+  @Column(DataType.INTEGER)
+  tier!: number;
 
-  @Column(DataType.STRING)
-  rank!: string;
+  @Column(DataType.INTEGER)
+  rank!: number;
 
   @Column(DataType.STRING)
   ment!: string;

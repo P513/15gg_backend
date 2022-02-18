@@ -134,24 +134,7 @@ exports.myinfo.post('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNoNi
         const rank = reqBody.rank;
         if (rank == null)
             return res.status(403).json((0, middlewares_1.successFalse)(null, '랭크를 입력해주세요', null));
-        const ment = reqBody.ment;
-        const selfPos = reqBody.selfPos;
-        if (selfPos == null || selfPos < 1 || selfPos > 5)
-            return res.status(403).json((0, middlewares_1.successFalse)(null, '선호 포지션을 입력해주세요', null));
-        const duoPos = reqBody.duoPos;
-        if (duoPos == null || duoPos < 1 || duoPos > 5)
-            return res.status(403).json((0, middlewares_1.successFalse)(null, '듀오 희망 포지션을 입력해주세요', null));
-        if (duoPos === selfPos)
-            return res.status(403).json((0, middlewares_1.successFalse)(null, '선호 포지션과 듀오 희망 포지션이 일치합니다', null));
-        const playStyle = reqBody.playStyle;
-        if (playStyle == null || playStyle < 1 || playStyle > 3)
-            return res.status(403).json((0, middlewares_1.successFalse)(null, '희망 플레이 스타일을 입력해주세요', null));
-        const voice = reqBody.voice;
-        if (voice == null || voice < 0 || voice > 1)
-            return res.status(403).json((0, middlewares_1.successFalse)(null, '보이스 유무를 입력해주세요', null));
-        const status = reqBody.status;
-        if (status == null || status < 0 || status > 1)
-            return res.status(403).json((0, middlewares_1.successFalse)(null, '듀오 모집 상태를 입력해주세요', null));
+        const status = false;
         const exNickname = yield index_1.NicknameRep.findOne({
             where: {
                 name
@@ -164,11 +147,6 @@ exports.myinfo.post('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNoNi
             name,
             tier,
             rank,
-            ment,
-            selfPos,
-            duoPos,
-            playStyle,
-            voice,
             status,
             createdAt: new Date(),
             updatedAt: null,
@@ -184,7 +162,7 @@ exports.myinfo.post('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNoNi
     }
 }));
 // 해당 유저의 nickname(info)의 닉네임 수정 API
-exports.myinfo.put('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.myinfo.patch('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const reqBody = req.body;
         const user = yield index_1.UserRep.findOne({

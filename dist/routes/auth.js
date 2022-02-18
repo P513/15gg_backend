@@ -70,7 +70,17 @@ exports.auth.post('/login', middlewares_1.isNotLoggedIn, (req, res, next) => __a
                 return res.status(403).json((0, middlewares_1.successFalse)(err, '로그인에 실패했습니다', null));
             }
             req.session.userId = _user.id;
-            return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', _user));
+            let nickname = null;
+            if (_user.nicknameId) {
+                const userNickname = yield index_1.NicknameRep.findOne({
+                    where: {
+                        id: _user.nicknameId
+                    }
+                });
+                if (userNickname)
+                    nickname = userNickname.name;
+            }
+            return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', { _user, nickname }));
         }));
     })(req, res, next);
 }));

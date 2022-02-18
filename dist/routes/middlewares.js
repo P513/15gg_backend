@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hasNoNickname = exports.hasNickname = exports.successFalse = exports.successTrue = exports.isNotLoggedIn = exports.isLoggedIn = void 0;
+exports.onDuo = exports.hasNoNickname = exports.hasNickname = exports.successFalse = exports.successTrue = exports.isNotLoggedIn = exports.isLoggedIn = void 0;
 const index_1 = require("./../models/index");
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
@@ -86,3 +86,31 @@ function hasNoNickname(req, res, next) {
     });
 }
 exports.hasNoNickname = hasNoNickname;
+// 해당 아이디가 모집을 허용하는지 && 닉네임 존재하는지 확인하는 middleware
+function onDuo(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const user = yield index_1.UserRep.findOne({
+                where: { id: req.session.userId }
+            });
+            if (!user)
+                return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
+            if (!user.nicknameId)
+                return res.status(403).json(successFalse(null, '닉네임 등록이 필요합니다', null));
+            const nickname = yield index_1.NicknameRep.findOne({
+                where: {
+                    id: user.nicknameId
+                }
+            });
+            if (!nickname)
+                return res.status(403).json(successFalse(null, '해당 닉네임이 존재하지 않습니다', null));
+            if (nickname.status === false)
+                return res.status(403).json(successFalse(null, '해당 유저는 듀오를 모집하지 않고 있습니다', null));
+            next();
+        }
+        catch (err) {
+            return res.status(403).json(successFalse(err, '', null));
+        }
+    });
+}
+exports.onDuo = onDuo;

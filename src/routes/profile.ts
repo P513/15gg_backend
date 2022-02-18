@@ -1,9 +1,8 @@
-import { match } from 'assert';
 import { NextFunction, Request, Response, Router, } from 'express';
 import { Sequelize } from 'sequelize-typescript';
 import Op from 'sequelize/lib/operators';
 import { NicknameRep, UserRep } from '../models/index';
-import { hasNickname, isLoggedIn, isNotLoggedIn, successFalse, successTrue } from './middlewares';
+import { hasNickname, isLoggedIn, isNotLoggedIn, onDuo, successFalse, successTrue } from './middlewares';
 
 export const profile = Router();
 
@@ -42,7 +41,7 @@ profile.get('/match/rand', isNotLoggedIn, async (req: Request, res: Response, ne
 });
 
 // 매칭 가져오기(로그인 O)
-profile.get('/match', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
+profile.get('/match', isLoggedIn, onDuo, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.session.userId;
     const user = await UserRep.findOne({
@@ -59,14 +58,13 @@ profile.get('/match', isLoggedIn, hasNickname, async (req: Request, res: Respons
       }
     });
     if (!nickname) return res.status(403).json(successFalse(null, '해당하는 닉네임이 존재하지 않습니다', null));
-    let cnt = 1 as number;
-    let matchList = new Set();
-    // rank는 기본 제한 사항, 전체 일치
+    let cnt = 18 as number, matchList = new Array(), matchIdx = new Array();
+    // 1. rank는 기본 제한 사항, 전체 일치
     const matches_all = await NicknameRep.findAndCountAll({
       where: {
         id: { [Op.ne]: nicknameId },
         tier: { [Op.between]: [nickname.tier - 1, nickname.tier + 1] },
-        selfPos: nickname.duoPos,
+        selfPos: { [Op.ne]: nickname.selfPos, [Op.eq]: nickname.duoPos },
         duoPos: nickname.selfPos,
         playStyle: nickname.playStyle,
         voice: nickname.voice,
@@ -74,23 +72,27 @@ profile.get('/match', isLoggedIn, hasNickname, async (req: Request, res: Respons
       },
       limit: 18
     });
-    // 18개 안 넘으면 다 넣어
-    if (cnt - matches_all.count > 0) matchList.add(matches_all);
+    if (matches_all.count === 0) { }
     else {
-      matches_all.rows.forEach(function (match) {
-        if (cnt) matchList.add(match);
-        cnt--;
-      });
-      const matchArr = Array.from(matchList);
-      return res.status(200).json(successTrue('랜덤 매칭과 개수입니다', { "count": matchList.size, "rows": matchArr }));
+      for (let i = 0; i < matches_all.count; i++) {
+        const match = matches_all.rows[i];
+        if (cnt > 0 && matchIdx.includes(match.id) === false) {
+          matchList.push(match);
+          matchIdx.push(match.id);
+          cnt--;
+        }
+        else if (cnt == 0) {
+          return res.status(200).json(successTrue('랜덤 매칭과 개수입니다', { "count": matchList.length, "rows": matchList }));
+        }
+      }
     };
 
-    // position 일치
+    // 2. position 일치
     const matches_pos = await NicknameRep.findAndCountAll({
       where: {
         id: { [Op.ne]: nicknameId },
         tier: { [Op.between]: [nickname.tier - 1, nickname.tier + 1] },
-        selfPos: nickname.duoPos,
+        selfPos: { [Op.ne]: nickname.selfPos, [Op.eq]: nickname.duoPos },
         duoPos: nickname.selfPos,
         [Op.or]: [
           { playStyle: nickname.playStyle },
@@ -100,23 +102,31 @@ profile.get('/match', isLoggedIn, hasNickname, async (req: Request, res: Respons
       },
       limit: 18
     });
-    if (cnt - matches_pos.count > 0) matchList.add(matches_pos);
+    if (matches_pos.count === 0) { }
     else {
-      matches_pos.rows.forEach(function (match) {
-        if (cnt) matchList.add(match);
-        cnt--;
-      });
-      const matchArr = Array.from(matchList);
-      return res.status(200).json(successTrue('랜덤 매칭과 개수입니다', { "count": matchList.size, "rows": matchArr }));
+      for (let i = 0; i < matches_pos.count; i++) {
+        const match = matches_pos.rows[i];
+        if (cnt > 0 && matchIdx.includes(match.id) === false) {
+          matchList.push(match);
+          matchIdx.push(match.id);
+          cnt--;
+        }
+        else if (cnt == 0) {
+          return res.status(200).json(successTrue('랜덤 매칭과 개수입니다', { "count": matchList.length, "rows": matchList }));
+        }
+      }
     };
 
-    // 하나만이라도 일치
+    // 3. 하나만이라도 일치
     const matches_tier = await NicknameRep.findAndCountAll({
       where: {
         id: { [Op.ne]: nicknameId },
         tier: { [Op.between]: [nickname.tier - 1, nickname.tier + 1] },
+        selfPos: { [Op.ne]: nickname.selfPos },
         [Op.or]: [
-          { selfPos: nickname.duoPos },
+          {
+            selfPos: { [Op.eq]: nickname.duoPos },
+          },
           { duoPos: nickname.selfPos },
           { playStyle: nickname.playStyle },
           { voice: nickname.voice }
@@ -125,17 +135,22 @@ profile.get('/match', isLoggedIn, hasNickname, async (req: Request, res: Respons
       },
       limit: 18
     });
-    if (cnt - matches_tier.count > 0) matchList.add(matches_tier);
+    if (matches_tier.count === 0) { }
     else {
-      matches_tier.rows.forEach(function (match) {
-        if (cnt) matchList.add(match);
-        cnt--;
-      });
-      const matchArr = Array.from(matchList);
-      return res.status(200).json(successTrue('랜덤 매칭과 개수입니다', { "count": matchList.size, "rows": matchArr }));
+      for (let i = 0; i < matches_tier.count; i++) {
+        const match = matches_tier.rows[i];
+        if (cnt > 0 && matchIdx.includes(match.id) === false) {
+          matchList.push(match);
+          matchIdx.push(match.id);
+          cnt--;
+        }
+        else if (cnt == 0) {
+          return res.status(200).json(successTrue('랜덤 매칭과 개수입니다', { "count": matchList.length, "rows": matchList }));
+        }
+      }
     };
-    const matchArr = Array.from(matchList);
-    return res.status(200).json(successTrue('랜덤 매칭과 개수입니다', { "count": matchList.size, "rows": matchArr }));
+    let matchArr = Array.from(matchList);
+    return res.status(200).json(successTrue('랜덤 매칭과 개수입니다', { "count": matchList.length, "rows": matchArr }));
   } catch (err) {
     return res.status(403).json(successFalse(err, '', null));
   }

@@ -39,7 +39,16 @@ auth.post('/login', isNotLoggedIn, async (req: Request, res: Response, next: Nex
         return res.status(403).json(successFalse(err, '로그인에 실패했습니다', null));
       }
       req.session.userId = _user.id;
-      return res.status(200).json(successTrue('로그인되었습니다', _user));
+      let nickname = null;
+      if (_user.nicknameId) {
+        const userNickname = await NicknameRep.findOne({
+          where: {
+            id: _user.nicknameId
+          }
+        });
+        if (userNickname) nickname = userNickname.name;
+      }
+      return res.status(200).json(successTrue('로그인되었습니다', { _user, nickname }));
     })
   })(req, res, next);
 });

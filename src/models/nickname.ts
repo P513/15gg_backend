@@ -1,4 +1,4 @@
-import { Table, Column, Model, HasMany, ForeignKey, PrimaryKey, IsUUID, DataType, Unique, Default, AutoIncrement } from 'sequelize-typescript';
+import { Table, Column, Model, HasMany, ForeignKey, PrimaryKey, IsUUID, DataType, Unique, Default, AutoIncrement, AllowNull } from 'sequelize-typescript';
 import User from './user';
 
 @Table({ tableName: "Nickname" })
@@ -23,18 +23,23 @@ export default class Nickname extends Model {
   @Column(DataType.INTEGER)
   rank!: number;
 
+  @AllowNull(true)
   @Column(DataType.STRING)
   ment!: string;
 
+  @AllowNull(true)
   @Column(DataType.INTEGER)
   selfPos!: number;
 
+  @AllowNull(true)
   @Column(DataType.INTEGER)
   duoPos!: number;
 
+  @AllowNull(true)
   @Column(DataType.INTEGER)
   playStyle!: number;
 
+  @AllowNull(true)
   @Column(DataType.INTEGER)
   voice!: number;
 

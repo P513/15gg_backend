@@ -6,7 +6,7 @@ export function isLoggedIn(req: Request, res: Response, next: NextFunction) {
     next();
   }
   else {
-    res.status(403).json(successFalse(null, '로그인이 필요합니다', null));
+    res.status(400).json(successFalse(null, '로그인이 필요합니다', null));
   }
 };
 
@@ -15,7 +15,7 @@ export function isNotLoggedIn(req: Request, res: Response, next: NextFunction) {
     next();
   }
   else {
-    res.status(403).json(successFalse(null, '이미 로그인된 상태입니다', null));
+    res.status(400).json(successFalse(null, '이미 로그인된 상태입니다', null));
   }
 };
 

@@ -121,3 +121,7 @@ auth.delete('/signout', isLoggedIn, async (req: Request, res: Response) => {
     return res.status(403).json(successFalse(err, '', null));
   }
 });
+
+auth.get('/status', isLoggedIn, async (req: Request, res: Response) => {
+  return res.status(200).json(successTrue('로그인 중입니다', null));
+})

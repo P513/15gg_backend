@@ -153,3 +153,6 @@ exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaite
         return res.status(403).json((0, middlewares_1.successFalse)(err, '', null));
     }
 }));
+exports.auth.get('/status', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    return res.status(200).json((0, middlewares_1.successTrue)('로그인 중입니다', null));
+}));

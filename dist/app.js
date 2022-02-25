@@ -67,6 +67,7 @@ app.use((0, express_session_1.default)({
     cookie: {
         httpOnly: true,
         secure: false,
+        maxAge: 1000 * 60 * 60,
     },
 }));
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));

@@ -72,8 +72,19 @@ auth.get('/kakao', passport.authenticate('kakao-login', (req: Request, _user: Us
 }));
 auth.get('/kakao/callback', passport.authenticate('kakao-login', {
   failureRedirect: '/',
-}), (req, res) => {
-  return res.status(200).json(successTrue('로그인되었습니다', null));
+}), async (req, res) => {
+  const user = await UserRep.findOne({
+    where: {
+      id: req.session.userId
+    }
+  });
+  let nickname = await NicknameRep.findOne({
+    where: {
+      id: user.nicknameId
+    }
+  });
+  if (!nickname) nickname.name = null;
+  return res.status(200).json(successTrue('로그인되었습니다', nickname.name));
 });
 
 // 네이버 로그인 API
@@ -84,8 +95,19 @@ auth.get('/naver', passport.authenticate('naver-login', { authType: 'reprompt' }
 }));
 auth.get('/naver/callback', passport.authenticate('naver-login', {
   failureRedirect: '/',
-}), (req, res) => {
-  return res.status(200).json(successTrue('로그인되었습니다', null));
+}), async (req, res) => {
+  const user = await UserRep.findOne({
+    where: {
+      id: req.session.userId
+    }
+  });
+  let nickname = await NicknameRep.findOne({
+    where: {
+      id: user.nicknameId
+    }
+  });
+  if (!nickname) nickname.name = null;
+  return res.status(200).json(successTrue('로그인되었습니다', nickname.name));
 });
 
 // 회원탈퇴 API
@@ -122,6 +144,19 @@ auth.delete('/signout', isLoggedIn, async (req: Request, res: Response) => {
   }
 });
 
+// 로그인 상태 확인 API (닉네임 있으면 return)
 auth.get('/status', isLoggedIn, async (req: Request, res: Response) => {
-  return res.status(200).json(successTrue('로그인 중입니다', null));
+  const user = await UserRep.findOne({
+    where: {
+      id: req.session.userId
+    }
+  });
+  if (!user) return res.status(403).json(successFalse(null, '해당하는 유저가 존재하지 않습니다', null));
+  const nickname = await NicknameRep.findOne({
+    where: {
+      id: user.nicknameId
+    }
+  });
+  if (!nickname) return res.status(200).json(successTrue('로그인 중입니다', null));
+  return res.status(200).json(successTrue('로그인 중입니다', nickname.name));
 })

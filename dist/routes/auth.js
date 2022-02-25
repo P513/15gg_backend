@@ -104,9 +104,21 @@ exports.auth.get('/kakao', passport_1.default.authenticate('kakao-login', (req, 
 }));
 exports.auth.get('/kakao/callback', passport_1.default.authenticate('kakao-login', {
     failureRedirect: '/',
-}), (req, res) => {
-    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', null));
-});
+}), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield index_2.UserRep.findOne({
+        where: {
+            id: req.session.userId
+        }
+    });
+    let nickname = yield index_1.NicknameRep.findOne({
+        where: {
+            id: user.nicknameId
+        }
+    });
+    if (!nickname)
+        nickname.name = null;
+    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', nickname.name));
+}));
 // 네이버 로그인 API
 exports.auth.get('/naver', passport_1.default.authenticate('naver-login', { authType: 'reprompt' }, (req, _user) => {
     if (_user) {
@@ -115,9 +127,21 @@ exports.auth.get('/naver', passport_1.default.authenticate('naver-login', { auth
 }));
 exports.auth.get('/naver/callback', passport_1.default.authenticate('naver-login', {
     failureRedirect: '/',
-}), (req, res) => {
-    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', null));
-});
+}), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield index_2.UserRep.findOne({
+        where: {
+            id: req.session.userId
+        }
+    });
+    let nickname = yield index_1.NicknameRep.findOne({
+        where: {
+            id: user.nicknameId
+        }
+    });
+    if (!nickname)
+        nickname.name = null;
+    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', nickname.name));
+}));
 // 회원탈퇴 API
 exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reqBody = req.body;
@@ -153,6 +177,21 @@ exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaite
         return res.status(403).json((0, middlewares_1.successFalse)(err, '', null));
     }
 }));
+// 로그인 상태 확인 API (닉네임 있으면 return)
 exports.auth.get('/status', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.status(200).json((0, middlewares_1.successTrue)('로그인 중입니다', null));
+    const user = yield index_2.UserRep.findOne({
+        where: {
+            id: req.session.userId
+        }
+    });
+    if (!user)
+        return res.status(403).json((0, middlewares_1.successFalse)(null, '해당하는 유저가 존재하지 않습니다', null));
+    const nickname = yield index_1.NicknameRep.findOne({
+        where: {
+            id: user.nicknameId
+        }
+    });
+    if (!nickname)
+        return res.status(200).json((0, middlewares_1.successTrue)('로그인 중입니다', null));
+    return res.status(200).json((0, middlewares_1.successTrue)('로그인 중입니다', nickname.name));
 }));

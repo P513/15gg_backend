@@ -124,16 +124,24 @@ function passportConfig() {
                 done(null, exUser);
             }
             else {
-                const newUser = yield index_1.UserRep.create({
-                    email: profile._json.kakao_account.email,
-                    nicknameId: null,
-                    naverOAuth: null,
-                    kakaoOAuth: profile.id,
-                    createdAt: new Date(),
-                    updatedAt: null,
-                    deletedAt: null
+                const exEmail = yield index_1.UserRep.findOne({
+                    where: { email: profile._json.kakao_account.email },
                 });
-                done(null, newUser);
+                if (exEmail) {
+                    throw ("Existed User");
+                }
+                else {
+                    const newUser = yield index_1.UserRep.create({
+                        email: profile._json.kakao_account.email,
+                        nicknameId: null,
+                        naverOAuth: null,
+                        kakaoOAuth: profile.id,
+                        createdAt: new Date(),
+                        updatedAt: null,
+                        deletedAt: null
+                    });
+                    done(null, newUser);
+                }
             }
         }
         catch (err) {
@@ -153,16 +161,24 @@ function passportConfig() {
                 done(null, exUser);
             }
             else {
-                const newUser = yield index_1.UserRep.create({
-                    email: profile.email,
-                    nicknameId: null,
-                    naverOAuth: profile.id,
-                    kakaoOAuth: null,
-                    createdAt: new Date(),
-                    updatedAt: null,
-                    deletedAt: null
+                const exEmail = yield index_1.UserRep.findOne({
+                    where: { email: profile.email },
                 });
-                done(null, newUser);
+                if (exEmail) {
+                    throw ("Existed User");
+                }
+                else {
+                    const newUser = yield index_1.UserRep.create({
+                        email: profile.email,
+                        nicknameId: null,
+                        naverOAuth: profile.id,
+                        kakaoOAuth: null,
+                        createdAt: new Date(),
+                        updatedAt: null,
+                        deletedAt: null
+                    });
+                    done(null, newUser);
+                }
             }
         }
         catch (err) {

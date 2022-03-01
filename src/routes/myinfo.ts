@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router, } from 'express';
 import { UserRep, NicknameRep } from '../models/index';
+import User from '../models/user';
 import { hasNickname, hasNoNickname, isLoggedIn, successFalse, successTrue } from './middlewares';
 
 export const myinfo = Router();
@@ -7,11 +8,7 @@ export const myinfo = Router();
 // 해당 유저의 nickname(info) API
 myinfo.get('/', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await UserRep.findOne({
-      where: {
-        id: req.session.userId
-      }
-    });
+    const user = req.user as User;
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     const nickname = await NicknameRep.findOne({
       where: {
@@ -30,11 +27,7 @@ myinfo.get('/', isLoggedIn, hasNickname, async (req: Request, res: Response, nex
 myinfo.patch('/', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const reqBody = req.body;
-    const user = await UserRep.findOne({
-      where: {
-        id: req.session.userId
-      }
-    });
+    const user = req.user as User;
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     const nickname = await NicknameRep.findOne({
       where: {
@@ -73,11 +66,7 @@ myinfo.patch('/', isLoggedIn, hasNickname, async (req: Request, res: Response, n
 // nickname 존재 여부 API
 myinfo.get('/nickname', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await UserRep.findOne({
-      where: {
-        id: req.session.userId
-      }
-    });
+    const user = req.user as User;
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     const nickname = await NicknameRep.findOne({
       where: {
@@ -96,11 +85,7 @@ myinfo.get('/nickname', isLoggedIn, hasNickname, async (req: Request, res: Respo
 myinfo.post('/nickname', isLoggedIn, hasNoNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const reqBody = req.body;
-    const user = await UserRep.findOne({
-      where: {
-        id: req.session.userId
-      }
-    });
+    const user = req.user as User;
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     const name = reqBody.name as string;
     if (name == null) return res.status(403).json(successFalse(null, '닉네임 이름을 입력해주세요', null));
@@ -138,11 +123,7 @@ myinfo.post('/nickname', isLoggedIn, hasNoNickname, async (req: Request, res: Re
 myinfo.patch('/nickname', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const reqBody = req.body;
-    const user = await UserRep.findOne({
-      where: {
-        id: req.session.userId
-      }
-    });
+    const user = req.user as User;
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     const name = reqBody.name as string;
     if (!name) return res.status(403).json(successFalse(null, '닉네임 이름을 입력해주세요', null));
@@ -162,7 +143,7 @@ myinfo.patch('/nickname', isLoggedIn, hasNickname, async (req: Request, res: Res
         name
       }
     });
-    if (exNickname && exNickname.userId != req.session.userId) return res.status(403).json(successFalse(null, '이미 존재하는 닉네임입니다', null));
+    if (exNickname && exNickname.userId != user.id) return res.status(403).json(successFalse(null, '이미 존재하는 닉네임입니다', null));
     nickname.update({
       name,
       tier,

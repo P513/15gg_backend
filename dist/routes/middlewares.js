@@ -53,9 +53,7 @@ exports.successFalse = successFalse;
 function hasNickname(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const user = yield index_1.UserRep.findOne({
-                where: { id: req.session.userId }
-            });
+            const user = req.user;
             if (!user)
                 return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
             if (!user.nicknameId)
@@ -71,9 +69,7 @@ exports.hasNickname = hasNickname;
 function hasNoNickname(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const user = yield index_1.UserRep.findOne({
-                where: { id: req.session.userId }
-            });
+            const user = req.user;
             if (!user)
                 return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
             if (user.nicknameId)
@@ -90,9 +86,7 @@ exports.hasNoNickname = hasNoNickname;
 function onDuo(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const user = yield index_1.UserRep.findOne({
-                where: { id: req.session.userId }
-            });
+            const user = req.user;
             if (!user)
                 return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
             if (!user.nicknameId)

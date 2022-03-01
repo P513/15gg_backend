@@ -60,12 +60,7 @@ exports.profile.get('/match/rand', middlewares_1.isNotLoggedIn, (req, res, next)
 // 매칭 가져오기(로그인 O)
 exports.profile.get('/match', middlewares_1.isLoggedIn, middlewares_1.onDuo, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = req.session.userId;
-        const user = yield index_1.UserRep.findOne({
-            where: {
-                id: userId
-            }
-        });
+        const user = req.user;
         if (!user)
             return res.status(404).json((0, middlewares_1.successFalse)(null, '존재하지 않는 사용자입니다', null));
         const nicknameId = user.nicknameId;

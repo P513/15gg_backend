@@ -17,11 +17,7 @@ exports.myinfo = (0, express_1.Router)();
 // 해당 유저의 nickname(info) API
 exports.myinfo.get('/', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield index_1.UserRep.findOne({
-            where: {
-                id: req.session.userId
-            }
-        });
+        const user = req.user;
         if (!user)
             return res.status(403).json((0, middlewares_1.successFalse)(null, '해당하는 사용자가 존재하지 않습니다', null));
         const nickname = yield index_1.NicknameRep.findOne({
@@ -42,11 +38,7 @@ exports.myinfo.get('/', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (re
 exports.myinfo.patch('/', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const reqBody = req.body;
-        const user = yield index_1.UserRep.findOne({
-            where: {
-                id: req.session.userId
-            }
-        });
+        const user = req.user;
         if (!user)
             return res.status(403).json((0, middlewares_1.successFalse)(null, '해당하는 사용자가 존재하지 않습니다', null));
         const nickname = yield index_1.NicknameRep.findOne({
@@ -93,11 +85,7 @@ exports.myinfo.patch('/', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (
 // nickname 존재 여부 API
 exports.myinfo.get('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield index_1.UserRep.findOne({
-            where: {
-                id: req.session.userId
-            }
-        });
+        const user = req.user;
         if (!user)
             return res.status(403).json((0, middlewares_1.successFalse)(null, '해당하는 사용자가 존재하지 않습니다', null));
         const nickname = yield index_1.NicknameRep.findOne({
@@ -118,11 +106,7 @@ exports.myinfo.get('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNickn
 exports.myinfo.post('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNoNickname, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const reqBody = req.body;
-        const user = yield index_1.UserRep.findOne({
-            where: {
-                id: req.session.userId
-            }
-        });
+        const user = req.user;
         if (!user)
             return res.status(403).json((0, middlewares_1.successFalse)(null, '해당하는 사용자가 존재하지 않습니다', null));
         const name = reqBody.name;
@@ -165,11 +149,7 @@ exports.myinfo.post('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNoNi
 exports.myinfo.patch('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const reqBody = req.body;
-        const user = yield index_1.UserRep.findOne({
-            where: {
-                id: req.session.userId
-            }
-        });
+        const user = req.user;
         if (!user)
             return res.status(403).json((0, middlewares_1.successFalse)(null, '해당하는 사용자가 존재하지 않습니다', null));
         const name = reqBody.name;
@@ -194,7 +174,7 @@ exports.myinfo.patch('/nickname', middlewares_1.isLoggedIn, middlewares_1.hasNic
                 name
             }
         });
-        if (exNickname && exNickname.userId != req.session.userId)
+        if (exNickname && exNickname.userId != user.id)
             return res.status(403).json((0, middlewares_1.successFalse)(null, '이미 존재하는 닉네임입니다', null));
         nickname.update({
             name,

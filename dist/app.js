@@ -87,7 +87,7 @@ app.use('/rating', rating_1.rating);
 passport_1.default.serializeUser(function (user, done) {
     done(null, user);
 });
-passport_1.default.deserializeUser(function (user, done) {
+passport_1.default.deserializeUser(function (req, user, done) {
     done(null, user);
 });
 app.listen(WEB_PORT, HOST, () => __awaiter(void 0, void 0, void 0, function* () {

@@ -1,6 +1,7 @@
 import { StarRep, UserRep, NicknameRep } from './../models/index';
 import { NextFunction, Request, Response, Router, } from 'express';
 import { hasNickname, isLoggedIn, successFalse, successTrue } from './middlewares';
+import User from '../models/user';
 
 export const rating = Router();
 
@@ -32,9 +33,10 @@ rating.get('/', isLoggedIn, hasNickname, async (req: Request, res: Response, nex
 rating.post('/', isLoggedIn, hasNickname, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const reqBody = req.body;
+    const user = req.user as User;
     const reviewer = await UserRep.findOne({
       where: {
-        id: req.session.userId
+        id: user.id
       }
     });
     if (!reviewer) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
@@ -57,13 +59,13 @@ rating.post('/', isLoggedIn, hasNickname, async (req: Request, res: Response, ne
     if (!reviewee) return res.status(403).json(successFalse(null, '해당 닉네임의 유저가 더 이상 존재하지 않습니다', null));
     const exStar = await StarRep.findOne({
       where: {
-        userId: req.session.userId,
+        userId: user.id,
         nicknameId
       }
     });
     if (exStar) return res.status(403).json(successFalse(null, '이미 평점을 입력하였습니다', exStar));
     await StarRep.create({
-      userId: req.session.userId,
+      userId: user.id,
       nicknameId
     });
     await nickname.update({

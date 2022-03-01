@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router, } from 'express';
 import { Sequelize } from 'sequelize-typescript';
 import Op from 'sequelize/lib/operators';
 import { NicknameRep, UserRep } from '../models/index';
+import User from '../models/user';
 import { hasNickname, isLoggedIn, isNotLoggedIn, onDuo, successFalse, successTrue } from './middlewares';
 
 export const profile = Router();
@@ -43,12 +44,7 @@ profile.get('/match/rand', isNotLoggedIn, async (req: Request, res: Response, ne
 // 매칭 가져오기(로그인 O)
 profile.get('/match', isLoggedIn, onDuo, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.session.userId;
-    const user = await UserRep.findOne({
-      where: {
-        id: userId
-      }
-    });
+    const user = req.user as User;
     if (!user) return res.status(404).json(successFalse(null, '존재하지 않는 사용자입니다', null));
     const nicknameId = user.nicknameId;
     if (!nicknameId) return res.status(403).json(successFalse(null, '닉네임을 먼저 등록해주세요', null));

@@ -1,5 +1,6 @@
 import { UserRep, NicknameRep } from './../models/index';
 import { Request, Response, NextFunction } from "express";
+import User from '../models/user';
 
 export function isLoggedIn(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) {
@@ -39,9 +40,7 @@ export function successFalse(err: any, message: string, data: any) {
 
 export async function hasNickname(req: Request, res: Response, next: NextFunction) {
   try {
-    const user = await UserRep.findOne({
-      where: { id: req.session.userId }
-    });
+    const user = req.user as User;
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     if (!user.nicknameId) return res.status(403).json(successFalse(null, '닉네임 등록이 필요합니다', null));
     next();
@@ -52,9 +51,7 @@ export async function hasNickname(req: Request, res: Response, next: NextFunctio
 
 export async function hasNoNickname(req: Request, res: Response, next: NextFunction) {
   try {
-    const user = await UserRep.findOne({
-      where: { id: req.session.userId }
-    });
+    const user = req.user as User;
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     if (user.nicknameId) return res.status(403).json(successFalse(null, '이미 닉네임 등록이 된 아이디입니다', null));
     next();
@@ -66,9 +63,7 @@ export async function hasNoNickname(req: Request, res: Response, next: NextFunct
 // 해당 아이디가 모집을 허용하는지 && 닉네임 존재하는지 확인하는 middleware
 export async function onDuo(req: Request, res: Response, next: NextFunction) {
   try {
-    const user = await UserRep.findOne({
-      where: { id: req.session.userId }
-    });
+    const user = req.user as User;
     if (!user) return res.status(403).json(successFalse(null, '해당하는 사용자가 존재하지 않습니다', null));
     if (!user.nicknameId) return res.status(403).json(successFalse(null, '닉네임 등록이 필요합니다', null));
     const nickname = await NicknameRep.findOne({

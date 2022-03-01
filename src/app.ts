@@ -12,6 +12,7 @@ import morgan from 'morgan';
 import passport from 'passport';
 import { passportConfig } from './config/passport';
 import session from 'express-session';
+import User from "./models/user";
 
 dotenv.config();
 
@@ -56,11 +57,11 @@ app.use('/myinfo', myinfo);
 app.use('/profile', profile);
 app.use('/rating', rating);
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function (user: any, done: any) {
   done(null, user);
 });
 
-passport.deserializeUser(function (user, done) {
+passport.deserializeUser(function (req: Request, user: User, done: any) {
   done(null, user);
 });
 

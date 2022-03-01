@@ -69,7 +69,6 @@ exports.auth.post('/login', middlewares_1.isNotLoggedIn, (req, res, next) => __a
                 console.log(err);
                 return res.status(403).json((0, middlewares_1.successFalse)(err, '로그인에 실패했습니다', null));
             }
-            req.session.userId = _user.id;
             let nickname = null;
             if (_user.nicknameId) {
                 const userNickname = yield index_1.NicknameRep.findOne({
@@ -86,7 +85,7 @@ exports.auth.post('/login', middlewares_1.isNotLoggedIn, (req, res, next) => __a
 }));
 // 로그아웃 API
 exports.auth.get('/logout', middlewares_1.isLoggedIn, (req, res) => {
-    if (req.session.userId) {
+    if (req.user) {
         req.session.destroy(function (err) {
             if (err) {
                 return res.status(403).json((0, middlewares_1.successFalse)(err, '세션 삭제에 실패했습니다', null));
@@ -98,60 +97,28 @@ exports.auth.get('/logout', middlewares_1.isLoggedIn, (req, res) => {
 });
 // 카카오 로그인 API
 exports.auth.get('/kakao', passport_1.default.authenticate('kakao-login', (req, _user) => {
-    if (_user) {
-        req.session.userId = _user.id;
-    }
 }));
 exports.auth.get('/kakao/callback', passport_1.default.authenticate('kakao-login', {
     failureRedirect: '/',
 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield index_2.UserRep.findOne({
-        where: {
-            id: req.session.userId
-        }
-    });
-    let nickname = yield index_1.NicknameRep.findOne({
-        where: {
-            id: user.nicknameId
-        }
-    });
-    if (!nickname)
-        nickname.name = null;
-    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', nickname.name));
+    const user = req.user;
+    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', user.id));
 }));
 // 네이버 로그인 API
 exports.auth.get('/naver', passport_1.default.authenticate('naver-login', { authType: 'reprompt' }, (req, _user) => {
-    if (_user) {
-        req.session.userId = _user.id;
-    }
 }));
 exports.auth.get('/naver/callback', passport_1.default.authenticate('naver-login', {
     failureRedirect: '/',
 }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield index_2.UserRep.findOne({
-        where: {
-            id: req.session.userId
-        }
-    });
-    let nickname = yield index_1.NicknameRep.findOne({
-        where: {
-            id: user.nicknameId
-        }
-    });
-    if (!nickname)
-        nickname.name = null;
-    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', nickname.name));
+    const user = req.user;
+    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', user.id));
 }));
 // 회원탈퇴 API
 exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reqBody = req.body;
     const password = reqBody.password;
     try {
-        const user = yield index_2.UserRep.findOne({
-            where: {
-                id: req.session.userId
-            }
-        });
+        const user = req.user;
         if (!user)
             return res.status(404).json((0, middlewares_1.successFalse)(null, '존재하지 않는 사용자입니다', null));
         const key = crypto.pbkdf2Sync(password, user.salt, 100000, 64, 'sha512');
@@ -181,7 +148,7 @@ exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaite
 exports.auth.get('/status', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield index_2.UserRep.findOne({
         where: {
-            id: req.session.userId
+            id: req.user
         }
     });
     if (!user)

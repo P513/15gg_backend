@@ -45,9 +45,10 @@ exports.rating.get('/', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (re
 exports.rating.post('/', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const reqBody = req.body;
+        const user = req.user;
         const reviewer = yield index_1.UserRep.findOne({
             where: {
-                id: req.session.userId
+                id: user.id
             }
         });
         if (!reviewer)
@@ -76,14 +77,14 @@ exports.rating.post('/', middlewares_1.isLoggedIn, middlewares_1.hasNickname, (r
             return res.status(403).json((0, middlewares_1.successFalse)(null, '해당 닉네임의 유저가 더 이상 존재하지 않습니다', null));
         const exStar = yield index_1.StarRep.findOne({
             where: {
-                userId: req.session.userId,
+                userId: user.id,
                 nicknameId
             }
         });
         if (exStar)
             return res.status(403).json((0, middlewares_1.successFalse)(null, '이미 평점을 입력하였습니다', exStar));
         yield index_1.StarRep.create({
-            userId: req.session.userId,
+            userId: user.id,
             nicknameId
         });
         yield nickname.update({

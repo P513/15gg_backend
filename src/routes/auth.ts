@@ -7,7 +7,6 @@ import * as classes from '../config/classes';
 import { UserRep } from '../models/index';
 import * as crypto from 'crypto';
 export const auth = Router();
-import axios from 'axios';
 
 // 회원가입 API
 auth.post('/signup', isNotLoggedIn, async (req: Request, res: Response, next: NextFunction) => {

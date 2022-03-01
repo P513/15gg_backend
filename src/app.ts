@@ -29,7 +29,10 @@ if (process.env.NODE_ENV === 'prod') {
 }
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.SERVER,
+  optionsSuccessStatus: 200
+}));
 app.use(cookieParser());
 app.use(session({
   resave: false,

@@ -58,7 +58,10 @@ else {
     app.use((0, morgan_1.default)('dev'));
 }
 // Middleware
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: process.env.SERVER,
+    optionsSuccessStatus: 200
+}));
 app.use((0, cookie_parser_1.default)());
 app.use((0, express_session_1.default)({
     resave: false,

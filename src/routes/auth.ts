@@ -64,41 +64,41 @@ auth.get('/logout', isLoggedIn, (req: Request, res: Response) => {
 });
 
 // 카카오 로그인 API
-auth.get('/kakao', passport.authenticate('kakao-login', (req: Request, _user: User) => {
-}));
-auth.get('/kakao/callback', passport.authenticate('kakao-login', {
-  failureRedirect: '/',
-}), async (req, res) => {
-  const user = req.user as User;
-  let nickname = null;
-  if (user.nicknameId) {
-    const userNickname = await NicknameRep.findOne({
-      where: {
-        id: user.nicknameId
-      }
-    });
-    if (userNickname) nickname = userNickname.name;
-  }
-  return res.status(200).json(successTrue('로그인되었습니다', { user, nickname }));
-});
+// auth.get('/kakao', passport.authenticate('kakao-login', (req: Request, _user: User) => {
+// }));
+// auth.get('/kakao/callback', passport.authenticate('kakao-login', {
+//   failureRedirect: '/',
+// }), async (req, res) => {
+//   const user = req.user as User;
+//   let nickname = null;
+//   if (user.nicknameId) {
+//     const userNickname = await NicknameRep.findOne({
+//       where: {
+//         id: user.nicknameId
+//       }
+//     });
+//     if (userNickname) nickname = userNickname.name;
+//   }
+//   return res.status(200).json(successTrue('로그인되었습니다', { user, nickname }));
+// });
 
 // 네이버 로그인 API
-auth.get('/naver', passport.authenticate('naver-login', { authType: 'reprompt' }, (req: Request, _user: User) => {
-}));
-auth.get('/naver/callback', passport.authenticate('naver-login', {
-  failureRedirect: '/',
-}), async (req, res) => {
-  const user = req.user as User; let nickname = null;
-  if (user.nicknameId) {
-    const userNickname = await NicknameRep.findOne({
-      where: {
-        id: user.nicknameId
-      }
-    });
-    if (userNickname) nickname = userNickname.name;
-  }
-  return res.status(200).json(successTrue('로그인되었습니다', { user, nickname }));
-});
+// auth.get('/naver', passport.authenticate('naver-login', { authType: 'reprompt' }, (req: Request, _user: User) => {
+// }));
+// auth.get('/naver/callback', passport.authenticate('naver-login', {
+//   failureRedirect: '/',
+// }), async (req, res) => {
+//   const user = req.user as User; let nickname = null;
+//   if (user.nicknameId) {
+//     const userNickname = await NicknameRep.findOne({
+//       where: {
+//         id: user.nicknameId
+//       }
+//     });
+//     if (userNickname) nickname = userNickname.name;
+//   }
+//   return res.status(200).json(successTrue('로그인되었습니다', { user, nickname }));
+// });
 
 // 회원탈퇴 API
 auth.delete('/signout', isLoggedIn, async (req: Request, res: Response) => {

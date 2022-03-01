@@ -96,43 +96,40 @@ exports.auth.get('/logout', middlewares_1.isLoggedIn, (req, res) => {
     return res.status(200).json((0, middlewares_1.successTrue)('로그아웃되었습니다', null));
 });
 // 카카오 로그인 API
-exports.auth.get('/kakao', passport_1.default.authenticate('kakao-login', (req, _user) => {
-}));
-exports.auth.get('/kakao/callback', passport_1.default.authenticate('kakao-login', {
-    failureRedirect: '/',
-}), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
-    let nickname = null;
-    if (user.nicknameId) {
-        const userNickname = yield index_1.NicknameRep.findOne({
-            where: {
-                id: user.nicknameId
-            }
-        });
-        if (userNickname)
-            nickname = userNickname.name;
-    }
-    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', { user, nickname }));
-}));
+// auth.get('/kakao', passport.authenticate('kakao-login', (req: Request, _user: User) => {
+// }));
+// auth.get('/kakao/callback', passport.authenticate('kakao-login', {
+//   failureRedirect: '/',
+// }), async (req, res) => {
+//   const user = req.user as User;
+//   let nickname = null;
+//   if (user.nicknameId) {
+//     const userNickname = await NicknameRep.findOne({
+//       where: {
+//         id: user.nicknameId
+//       }
+//     });
+//     if (userNickname) nickname = userNickname.name;
+//   }
+//   return res.status(200).json(successTrue('로그인되었습니다', { user, nickname }));
+// });
 // 네이버 로그인 API
-exports.auth.get('/naver', passport_1.default.authenticate('naver-login', { authType: 'reprompt' }, (req, _user) => {
-}));
-exports.auth.get('/naver/callback', passport_1.default.authenticate('naver-login', {
-    failureRedirect: '/',
-}), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
-    let nickname = null;
-    if (user.nicknameId) {
-        const userNickname = yield index_1.NicknameRep.findOne({
-            where: {
-                id: user.nicknameId
-            }
-        });
-        if (userNickname)
-            nickname = userNickname.name;
-    }
-    return res.status(200).json((0, middlewares_1.successTrue)('로그인되었습니다', { user, nickname }));
-}));
+// auth.get('/naver', passport.authenticate('naver-login', { authType: 'reprompt' }, (req: Request, _user: User) => {
+// }));
+// auth.get('/naver/callback', passport.authenticate('naver-login', {
+//   failureRedirect: '/',
+// }), async (req, res) => {
+//   const user = req.user as User; let nickname = null;
+//   if (user.nicknameId) {
+//     const userNickname = await NicknameRep.findOne({
+//       where: {
+//         id: user.nicknameId
+//       }
+//     });
+//     if (userNickname) nickname = userNickname.name;
+//   }
+//   return res.status(200).json(successTrue('로그인되었습니다', { user, nickname }));
+// });
 // 회원탈퇴 API
 exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reqBody = req.body;

@@ -60,7 +60,8 @@ else {
 // Middleware
 app.use((0, cors_1.default)({
     origin: process.env.SERVER,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    credentials: true,
 }));
 app.use((0, cookie_parser_1.default)());
 app.use((0, express_session_1.default)({

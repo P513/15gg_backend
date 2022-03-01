@@ -31,7 +31,8 @@ if (process.env.NODE_ENV === 'prod') {
 // Middleware
 app.use(cors({
   origin: process.env.SERVER,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  credentials: true,
 }));
 app.use(cookieParser());
 app.use(session({

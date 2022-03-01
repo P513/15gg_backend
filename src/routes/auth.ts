@@ -132,11 +132,7 @@ auth.delete('/signout', isLoggedIn, async (req: Request, res: Response) => {
 
 // 로그인 상태 확인 API (닉네임 있으면 return)
 auth.get('/status', isLoggedIn, async (req: Request, res: Response) => {
-  const user = await UserRep.findOne({
-    where: {
-      id: req.user
-    }
-  });
+  const user = req.user as User;
   if (!user) return res.status(403).json(successFalse(null, '해당하는 유저가 존재하지 않습니다', null));
   const nickname = await NicknameRep.findOne({
     where: {

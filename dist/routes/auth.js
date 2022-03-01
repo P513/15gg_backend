@@ -37,7 +37,6 @@ const express_1 = require("express");
 const middlewares_1 = require("./middlewares");
 const passport_1 = __importDefault(require("passport"));
 const classes = __importStar(require("../config/classes"));
-const index_2 = require("../models/index");
 const crypto = __importStar(require("crypto"));
 exports.auth = (0, express_1.Router)();
 // 회원가입 API
@@ -163,11 +162,7 @@ exports.auth.delete('/signout', middlewares_1.isLoggedIn, (req, res) => __awaite
 }));
 // 로그인 상태 확인 API (닉네임 있으면 return)
 exports.auth.get('/status', middlewares_1.isLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield index_2.UserRep.findOne({
-        where: {
-            id: req.user
-        }
-    });
+    const user = req.user;
     if (!user)
         return res.status(403).json((0, middlewares_1.successFalse)(null, '해당하는 유저가 존재하지 않습니다', null));
     const nickname = yield index_1.NicknameRep.findOne({

@@ -34,11 +34,13 @@ app.use(cors({
   optionsSuccessStatus: 200,
   credentials: true,
 }));
-app.all('/*', function (req: Request, res: Response, next: NextFunction) {
-  res.header('Access-Control-Allow-Origin', process.env.SERVER);
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+app.use(function (req: Request, res: Response, next: NextFunction) {
+  res.setHeader('Access-Control-Allow-Origin', process.env.SERVER);
+  res.setHeader('Access-Control-Allow-Method', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', 1);
   next();
-});
+})
 app.use(cookieParser());
 app.use(session({
   resave: false,

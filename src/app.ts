@@ -34,6 +34,11 @@ app.use(cors({
   optionsSuccessStatus: 200,
   credentials: true,
 }));
+app.all('/*', function (req: Request, res: Response, next: NextFunction) {
+  res.header('Access-Control-Allow-Origin', process.env.SERVER);
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+  next();
+});
 app.use(cookieParser());
 app.use(session({
   resave: false,

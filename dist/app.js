@@ -63,6 +63,11 @@ app.use((0, cors_1.default)({
     optionsSuccessStatus: 200,
     credentials: true,
 }));
+app.all('/*', function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', process.env.SERVER);
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+    next();
+});
 app.use((0, cookie_parser_1.default)());
 app.use((0, express_session_1.default)({
     resave: false,

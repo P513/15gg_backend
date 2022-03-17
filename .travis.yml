@@ -1,20 +1,20 @@
 language: node_js
 
 branches:
-only:
-- master
+  only:
+    - master
 
 node_js:
-- '14.17.0'
+  - '14.17.0'
 
 services:
-- mysql
+  - mysql
 
 script:
-- npm run start
+  - npm run start
 
 notifications:
-email:
-recipients:
-- psb9663@gmail.com
-- psb9663@ajou.ac.kr
+  email:
+    recipients:
+      - psb9663@gmail.com
+      - psb9663@ajou.ac.kr

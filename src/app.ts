@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'prod') {
 // Middleware
 app.use(cors({
   origin: process.env.SERVER,
-  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+  methods: "GET, HEAD, PUT, PATCH, POST, OPTIONS, DELETE",
   preflightContinue: false,
   optionsSuccessStatus: 200,
   credentials: true,

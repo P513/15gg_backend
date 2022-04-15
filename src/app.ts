@@ -28,18 +28,14 @@ if (process.env.NODE_ENV === 'prod') {
   app.use(morgan('dev'));
 }
 
-// app.use((req: Request, res: Response, next: NextFunction) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'content-type, x-access-token');
-//   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
-//   // res.setHeader('Access-Control-Allow-Origin', process.env.SERVER);
-//   // res.setHeader('Access-Control-Allow-Method', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-//   // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-//   // res.setHeader('Access-Control-Allow-Credentials', 1);
-//   next();
-// });
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.SERVER,
+  methods: "GET, PUT, PATCH, POST, DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 200,
+  credentials: true,
+}));
 app.use(cookieParser());
 app.use(session({
   resave: false,

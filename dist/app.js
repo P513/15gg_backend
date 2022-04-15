@@ -57,16 +57,16 @@ if (process.env.NODE_ENV === 'prod') {
 else {
     app.use((0, morgan_1.default)('dev'));
 }
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'content-type, x-access-token');
-    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
-    // res.setHeader('Access-Control-Allow-Origin', process.env.SERVER);
-    // res.setHeader('Access-Control-Allow-Method', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    // res.setHeader('Access-Control-Allow-Credentials', 1);
-    next();
-});
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Headers', 'content-type, x-access-token');
+//   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+//   // res.setHeader('Access-Control-Allow-Origin', process.env.SERVER);
+//   // res.setHeader('Access-Control-Allow-Method', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//   // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//   // res.setHeader('Access-Control-Allow-Credentials', 1);
+//   next();
+// });
 // Middleware
 app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());

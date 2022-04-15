@@ -60,7 +60,7 @@ else {
 // Middleware
 app.use((0, cors_1.default)({
     origin: process.env.SERVER,
-    methods: "GET, PUT, PATCH, POST, DELETE",
+    methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
     preflightContinue: false,
     optionsSuccessStatus: 200,
     credentials: true,

@@ -39,11 +39,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 // Middleware
-const corsOptions = {
-  origin: process.env.SERVER,
-  credentials: true,
-};
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(cookieParser());
 app.use(session({
   resave: false,

@@ -68,11 +68,7 @@ app.use((req, res, next) => {
     next();
 });
 // Middleware
-const corsOptions = {
-    origin: process.env.SERVER,
-    credentials: true,
-};
-app.use((0, cors_1.default)(corsOptions));
+app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, express_session_1.default)({
     resave: false,
